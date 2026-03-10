@@ -658,7 +658,7 @@
         <div id="palette"></div>
     </div>
 
-    <!-- ТВОЙ ОРИГИНАЛЬНЫЙ СКРИПТ (БЕЗ ЕДИНОГО ИЗМЕНЕНИЯ) -->
+    <!-- ИСПРАВЛЕННЫЙ JAVASCRIPT -->
     <script>
         const colors = ['#ff4757', '#ffa502', '#eccc68', '#7bed9f', '#2ed573', '#70a1ff', '#5352ed', '#a4b0be', '#2f3542'];
         let currentColor = colors[0];
@@ -1044,7 +1044,14 @@
                     const pos = getCanvasPos(e.clientX, e.clientY);
                     startDrawing(pos);
                 }
-            } else if (evCache.length === 2) {
+            } else if (evCache.length >= 2) {
+                // ИСПРАВЛЕНИЕ 1: Надёжное удаление точки при двойном касании (зум/щипок)
+                if (isDrawing && undoStack.length > 0) {
+                    undo(); 
+                    redoStack = []; 
+                    updateHistoryButtons();
+                }
+                
                 stopDrawing();
                 isGesturing = true;
                 transformLayer.classList.add('panning');
@@ -1075,7 +1082,7 @@
                     const pos = getCanvasPos(e.clientX, e.clientY);
                     draw(pos);
                 }
-            } else if (evCache.length === 2 && isGesturing) {
+            } else if (evCache.length >= 2 && isGesturing) {
                 const curDiff = Math.hypot(evCache[0].clientX - evCache[1].clientX, evCache[0].clientY - evCache[1].clientY);
                 const curCenter = {
                     x: (evCache[0].clientX + evCache[1].clientX) / 2,
@@ -1144,7 +1151,9 @@
 
             pCtx.lineCap = 'round';
             pCtx.lineJoin = 'round';
-            pCtx.lineWidth = currentBrushSize * (CANVAS_SIZE / paintCanvas.clientWidth) * currentScale;
+            
+            // ИСПРАВЛЕНИЕ 2: Заменили "* currentScale" на "/ currentScale", чтобы кисть не раздувалась при зуме
+            pCtx.lineWidth = currentBrushSize * (CANVAS_SIZE / paintCanvas.clientWidth) / currentScale;
             pCtx.strokeStyle = isEraser ? '#ffffff' : currentColor;
 
             pCtx.beginPath();
@@ -1161,7 +1170,9 @@
             pCtx.clip(activePath);
             pCtx.fillStyle = isEraser ? '#ffffff' : currentColor;
             pCtx.beginPath();
-            let radius = (currentBrushSize * (CANVAS_SIZE / paintCanvas.clientWidth) * currentScale) / 2;
+            
+            // ИСПРАВЛЕНИЕ 2: Заменили "* currentScale" на "/ currentScale" для точки
+            let radius = (currentBrushSize * (CANVAS_SIZE / paintCanvas.clientWidth) / currentScale) / 2;
             pCtx.arc(x, y, radius, 0, Math.PI * 2);
             pCtx.fill();
             pCtx.restore();
