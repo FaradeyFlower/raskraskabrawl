@@ -9,6 +9,8 @@
     <script src="https://yandex.ru/games/sdk/v2"></script>
     <script src="levels.js"></script>
 
+
+
     <style>
         @font-face {
             font-family: 'MyCustomFont';
@@ -480,7 +482,7 @@
                 display: none;
             }
 
-            /* *** ИЗМЕНЕНИЕ: Холст на 100% ширины и высоты экрана *** */
+            /* *** Холст на 100% ширины и высоты экрана *** */
             .canvas-viewport {
                 width: 100vw;
                 height: 100vh;
@@ -944,9 +946,12 @@
             svgOverlay.innerHTML = '';
             currentPaths2D = [];
 
+            // *** ИСПРАВЛЕНИЕ СМЕЩЕНИЯ КОНТУРОВ ***
+            const viewportRect = viewport.getBoundingClientRect(); // 1. Получаем реальный размер холста
             const measurer = document.createElement('div');
-            measurer.style.cssText = 'position:absolute; top:0; left:0; opacity:0; pointer-events:none; width:800px; height:800px; overflow:hidden; z-index:-100;';
-
+            // 2. Задаем измерителю тот же размер, что и у видимого холста
+            measurer.style.cssText = `position:absolute; top:0; left:0; opacity:0; pointer-events:none; width:${viewportRect.width}px; height:${viewportRect.height}px; overflow:hidden; z-index:-100;`;
+            
             let safeSvgStr = pic.svg;
             if (!safeSvgStr.includes('fill')) {
                 safeSvgStr = safeSvgStr.replace('<path ', '<path fill="#ffffff" stroke="#000000" stroke-width="3" ');
