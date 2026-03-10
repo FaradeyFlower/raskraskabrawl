@@ -34,238 +34,535 @@
         }
 
         @keyframes scrollBg {
-            0% { background-position: 0 0; }
-            100% { background-position: 150px 150px; }
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 150px 150px;
+            }
         }
 
+        /* Общие стили экранов */
         .screen {
             width: 100vw;
             height: 100vh;
             box-sizing: border-box;
             display: none;
-            flex-direction: column;
-            position: relative;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         .screen.active {
-            display: flex;
+            display: block;
             animation: bounceIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         @keyframes bounceIn {
-            0% { opacity: 0; transform: scale(0.9); }
-            100% { opacity: 1; transform: scale(1); }
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         /* ================= ЭКРАН МЕНЮ ================= */
         #menu-screen {
             padding: 15px 20px;
             max-width: 800px;
+            height: auto;
             max-height: 98vh;
+            position: relative;
             margin: auto;
             overflow-y: auto;
+            display: none;
+            flex-direction: column;
         }
-        #menu-screen::-webkit-scrollbar { display: none; }
+
+        #menu-screen.active {
+            display: flex;
+        }
+
+        #menu-screen::-webkit-scrollbar {
+            display: none;
+        }
 
         h1 {
-            color: #ffffff; margin-top: 0; margin-bottom: 10px;
-            font-size: clamp(22px, 5vw, 36px); text-transform: uppercase;
-            letter-spacing: 1px; -webkit-text-stroke: 2px #000000;
-            text-shadow: 3px 3px 0px #000000; text-align: center;
+            color: #ffffff;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: clamp(22px, 5vw, 36px);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            -webkit-text-stroke: 2px #000000;
+            text-shadow: 3px 3px 0px #000000;
+            text-align: center;
         }
 
-        .search-container { margin: 0 0 10px 0; width: 100%; }
+        .search-container {
+            margin: 0 0 10px 0;
+            width: 100%;
+        }
+
         .search-input {
-            width: 100%; padding: 10px 15px; border: 4px solid #000000;
-            background-color: #ffffff; color: #000; border-radius: 8px;
-            font-size: 18px; box-sizing: border-box; font-family: 'Lilita One', cursive;
-            box-shadow: 4px 4px 0px #000000; outline: none; transition: 0.1s;
+            width: 100%;
+            padding: 10px 15px;
+            border: 4px solid #000000;
+            background-color: #ffffff;
+            color: #000;
+            border-radius: 8px;
+            font-size: 18px;
+            box-sizing: border-box;
+            font-family: 'Lilita One', cursive;
+            box-shadow: 4px 4px 0px #000000;
+            outline: none;
+            transition: 0.1s;
         }
-        .search-input:focus { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000000; background-color: #fffde7; }
-        .empty-search { text-align: center; color: #fff; font-size: 20px; -webkit-text-stroke: 1px #000; }
 
-        #levels-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; align-content: center; }
+        .search-input:focus {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #000000;
+            background-color: #fffde7;
+        }
+
+        .empty-search {
+            text-align: center;
+            color: #fff;
+            font-size: 20px;
+            -webkit-text-stroke: 1px #000;
+        }
+
+        #levels-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            align-content: center;
+        }
+
         .level-card {
             background: linear-gradient(180deg, #4dc9ff 0%, #1579ff 100%);
-            border: 4px solid #000000; border-radius: 6px; padding: 6px; cursor: pointer;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            box-shadow: 4px 4px 0px #000000; transition: all 0.1s;
+            border: 4px solid #000000;
+            border-radius: 6px;
+            padding: 6px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 4px 4px 0px #000000;
+            transition: all 0.1s;
         }
-        .level-card:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0px #000000; }
+
+        .level-card:active {
+            transform: translate(3px, 3px);
+            box-shadow: 1px 1px 0px #000000;
+        }
+
         .level-card svg {
-            width: 100%; height: 12vh; min-height: 50px; max-height: 90px;
-            pointer-events: none; display: block; background: #ffffff;
-            border: 3px solid #000000; border-radius: 4px; box-sizing: border-box;
-            overflow: visible; margin-bottom: 5px;
+            width: 100%;
+            height: 12vh;
+            min-height: 50px;
+            max-height: 90px;
+            pointer-events: none;
+            display: block;
+            background: #ffffff;
+            border: 3px solid #000000;
+            border-radius: 4px;
+            box-sizing: border-box;
+            overflow: visible;
+            margin-bottom: 5px;
         }
+
         .level-title {
-            color: #ffffff; font-size: clamp(12px, 3vw, 16px); text-transform: uppercase;
-            -webkit-text-stroke: 1px #000000; text-shadow: 2px 2px 0px #000000;
-            text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;
+            color: #ffffff;
+            font-size: clamp(12px, 3vw, 16px);
+            text-transform: uppercase;
+            -webkit-text-stroke: 1px #000000;
+            text-shadow: 2px 2px 0px #000000;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
         }
 
         .pagination {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-top: 15px; background: rgba(0, 0, 0, 0.3); padding: 8px;
-            border-radius: 8px; border: 3px solid #000;
-        }
-        #page-info { font-size: 20px; color: #fff; -webkit-text-stroke: 1px #000; }
-
-
-        /* ================= ЭКРАН ИГРЫ (МАКСИМАЛЬНЫЙ ХОЛСТ + ОВЕРЛЕЙ) ================= */
-        #game-screen { padding: 0; overflow: hidden; }
-
-        /* Контейнер, растягивающий холст по центру */
-        .canvas-container {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            display: flex; justify-content: center; align-items: center;
-            padding: 10px; box-sizing: border-box; z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px;
+            border-radius: 8px;
+            border: 3px solid #000;
         }
 
-        /* Твой оригинальный холст - математика сохранена 1в1 */
+        #page-info {
+            font-size: 20px;
+            color: #fff;
+            -webkit-text-stroke: 1px #000;
+        }
+
+        /* ================= ЭКРАН ИГРЫ (ОПТИМИЗАЦИЯ ПОД МОБИЛКИ) ================= */
+
+        /* 1. Идеальный холст в центре экрана (Математика не сломается) */
         .canvas-viewport {
-            width: 100%; height: 100%; max-width: 100vmin; max-height: 100vmin;
-            aspect-ratio: 1 / 1; border: 5px solid #000000; border-radius: 8px;
-            background: white; box-shadow: 4px 4px 0px #000000;
-            overflow: hidden; position: relative; touch-action: none; cursor: crosshair;
-            box-sizing: border-box; flex-shrink: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            /* Гарантирует идеальный квадрат, чтобы не сдвинулись матрицы путей */
+            width: 98vmin;
+            height: 98vmin;
+            border: 5px solid #000000;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 4px 4px 0px #000000;
+            overflow: hidden;
+            touch-action: none;
+            cursor: crosshair;
+            z-index: 1;
+            /* ВАЖНО: default content-box сохраняет математику холста */
+            box-sizing: content-box;
         }
+
         #canvas-transform-layer {
-            width: 100%; height: 100%; position: absolute; top: 0; left: 0;
-            transform-origin: 0 0; transition: transform 0.05s linear; 
-        }
-        #canvas-transform-layer.panning { transition: none; }
-        canvas, #svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        #svg-overlay { pointer-events: none; mix-blend-mode: multiply; }
-        #svg-overlay svg { width: 100%; height: 100%; display: block; }
-
-        /* --- ИНТЕРФЕЙС ПОВЕРХ ХОЛСТА --- */
-        .ui-overlay {
-            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
-            pointer-events: none; /* Пропускаем клики сквозь пустоту на холст */
-            z-index: 10;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform-origin: 0 0;
+            transition: transform 0.05s linear;
         }
 
-        .ui-top {
-            position: absolute; top: 15px; left: 15px; right: 15px;
-            display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;
+        #canvas-transform-layer.panning {
+            transition: none;
+        }
+
+        canvas,
+        #svg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #svg-overlay {
             pointer-events: none;
+            mix-blend-mode: multiply;
         }
-        .ui-top > * { pointer-events: auto; } /* Возвращаем кликабельность блокам */
 
+        #svg-overlay svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* 2. Интерфейс (Оверлей парит поверх холста) */
         .header-game {
-            display: flex; align-items: center; gap: 10px;
-            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); padding: 8px;
-            border-radius: 8px; border: 3px solid #000; flex-shrink: 0;
-        }
-        #game-title { font-size: clamp(16px, 3vw, 24px); margin: 0; padding: 0 10px; }
-        
-        .canvas-toolbar {
-            display: flex; gap: 10px; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px);
-            padding: 8px; border-radius: 8px; border: 3px solid #000; flex-wrap: wrap; justify-content: center;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 15px;
+            border-radius: 10px;
+            border: 3px solid #000;
+            backdrop-filter: blur(4px);
         }
 
-        .ui-right {
-            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
-            display: flex; flex-direction: column; gap: 10px; width: 250px;
-            pointer-events: none;
+        #game-title {
+            font-size: clamp(18px, 4vw, 24px);
+            margin: 0;
         }
-        .ui-right > * { pointer-events: auto; }
+
+        .canvas-toolbar {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 10;
+            display: flex;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px;
+            border-radius: 10px;
+            border: 3px solid #000;
+            backdrop-filter: blur(4px);
+        }
+
+        .tools-sidebar {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 250px;
+        }
 
         .tools-panel {
-            background: rgba(43, 119, 255, 0.85); backdrop-filter: blur(4px);
-            border: 4px solid #000000; padding: 12px; border-radius: 8px;
-            box-shadow: 4px 4px 0px #000000; display: flex; flex-direction: column; gap: 8px;
+            background: rgba(43, 119, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            border: 4px solid #000000;
+            box-shadow: 4px 4px 0px #000000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            backdrop-filter: blur(4px);
         }
-        
-        .action-buttons-row { display: flex; gap: 10px; justify-content: space-between; }
-        .action-buttons-row button { flex-grow: 1; padding: 6px; }
 
-        .ui-bottom {
-            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 600px; display: flex; justify-content: center;
-            pointer-events: none;
+        .action-buttons-row {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
         }
-        .ui-bottom > * { pointer-events: auto; }
+
+        .action-buttons-row button {
+            flex-grow: 1;
+            padding: 8px;
+        }
 
         #palette {
-            display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
-            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px);
-            padding: 10px; border-radius: 8px; border: 3px solid #000;
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            width: 90vw;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            border-radius: 10px;
+            border: 3px solid #000;
+            backdrop-filter: blur(4px);
         }
 
-        /* --- СТИЛИ КНОПОК --- */
+        /* 3. Кнопки и Слайдеры */
         button.ui-btn {
-            background: #ffcc00; border: 3px solid #000000; padding: 8px 12px;
-            border-radius: 6px; cursor: pointer; font-family: 'Lilita One', cursive;
-            font-size: 16px; color: #ffffff; -webkit-text-stroke: 1px #000000;
-            text-shadow: 2px 2px 0px #000000; box-shadow: 3px 3px 0px #000000;
-            transition: all 0.1s; text-transform: uppercase;
-            display: flex; align-items: center; justify-content: center; gap: 5px;
+            background: #ffcc00;
+            border: 3px solid #000000;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Lilita One', cursive;
+            font-size: 16px;
+            color: #ffffff;
+            -webkit-text-stroke: 1px #000000;
+            text-shadow: 2px 2px 0px #000000;
+            box-shadow: 3px 3px 0px #000000;
+            transition: all 0.1s;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
         }
-        button.ui-btn:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 0px 0px 0px #000000; }
-        button.ui-btn:disabled { background: #757575; color: #cccccc; cursor: not-allowed; box-shadow: 3px 3px 0px #000000; }
-        .tool-mode { background: #1579ff; flex-grow: 1; }
-        .tool-mode.active { background: #21ff00; }
-        #eraser-btn { background: #ffcc00; width: 100%; }
-        #eraser-btn.active { background: #fff; border-color: #21ff00; }
 
-        input[type="range"] { flex-grow: 1; -webkit-appearance: none; width: 100%; background: transparent; }
-        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 14px; background: #000000; border-radius: 7px; }
+        button.ui-btn:active:not(:disabled) {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px #000000;
+        }
+
+        button.ui-btn:disabled {
+            background: #757575;
+            color: #cccccc;
+            cursor: not-allowed;
+            box-shadow: 3px 3px 0px #000000;
+        }
+
+        .tool-mode {
+            background: #1579ff;
+            flex-grow: 1;
+        }
+
+        .tool-mode.active {
+            background: #21ff00;
+        }
+
+        #eraser-btn {
+            background: #ffcc00;
+            width: 100%;
+        }
+
+        #eraser-btn.active {
+            background: #fff;
+            border-color: #21ff00;
+        }
+
+        input[type="range"] {
+            flex-grow: 1;
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 14px;
+            background: #000000;
+            border-radius: 7px;
+        }
+
         input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none; height: 30px; width: 30px; border-radius: 50%;
-            background: #21ff00; border: 4px solid #000000; margin-top: -8px; cursor: pointer;
+            -webkit-appearance: none;
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+            background: #21ff00;
+            border: 4px solid #000000;
+            margin-top: -8px;
+            cursor: pointer;
         }
 
         .color-btn {
-            width: clamp(30px, 8vw, 42px); height: clamp(30px, 8vw, 42px);
-            border-radius: 8px; border: 3px solid #000000; cursor: pointer; transition: all 0.1s;
+            width: clamp(30px, 8vw, 42px);
+            height: clamp(30px, 8vw, 42px);
+            border-radius: 8px;
+            border: 3px solid #000000;
+            cursor: pointer;
+            transition: all 0.1s;
             box-shadow: 3px 3px 0px #000000;
         }
-        .color-btn:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px #000000; }
+
+        .color-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px #000000;
+        }
+
         .color-btn.active {
-            transform: scale(1.1); border-color: #ffffff;
+            transform: scale(1.1);
+            border-color: #ffffff;
             box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.8);
         }
 
         button.action-btn {
-            padding: 12px 15px; font-size: clamp(16px, 4vw, 20px); background: #ffcc00; color: #ffffff;
-            border: 4px solid #000000; border-radius: 8px; cursor: pointer; flex-shrink: 0;
-            font-family: 'Lilita One', cursive; -webkit-text-stroke: 1px #000000;
-            text-shadow: 2px 2px 0px #000000; box-shadow: 4px 4px 0px #000000;
-            transition: all 0.1s; width: 100%; text-transform: uppercase;
+            padding: 12px;
+            font-size: 18px;
+            background: #ffcc00;
+            color: #ffffff;
+            border: 4px solid #000000;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Lilita One', cursive;
+            -webkit-text-stroke: 1px #000000;
+            text-shadow: 2px 2px 0px #000000;
+            box-shadow: 4px 4px 0px #000000;
+            transition: all 0.1s;
+            width: 100%;
+            text-transform: uppercase;
         }
-        button.action-btn:active { transform: translate(3px, 3px); box-shadow: 0px 0px 0px #000000; }
 
-        /* ================= АДАПТИВНОСТЬ ПОД ТЕЛЕФОНЫ ================= */
+        button.action-btn:active {
+            transform: translate(3px, 3px);
+            box-shadow: 0px 0px 0px #000000;
+        }
+
+        /* ================= АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ ================= */
         @media (max-width: 800px) {
-            .hide-text { display: none; } /* Скрываем текст кнопок */
-            button.ui-btn { padding: 8px; font-size: 20px; }
-            
-            .ui-top { flex-direction: column; align-items: center; }
-            .canvas-toolbar { justify-content: center; width: auto; }
-            
-            .ui-right {
-                top: auto; bottom: 85px; transform: none; right: 10px; left: 10px;
-                flex-direction: row; width: auto; align-items: flex-end;
+            .hide-text {
+                display: none;
             }
-            .tools-panel { flex-grow: 1; padding: 10px; }
-            button.action-btn { width: auto; padding: 10px; font-size: 22px; }
+
+            /* Прячем текст кнопок */
+
+            /* Холст расширяем до максимума на телефонах */
+            .canvas-viewport {
+                width: 100vw;
+                height: 100vw;
+                border-left: none;
+                border-right: none;
+                border-radius: 0;
+            }
+
+            .header-game {
+                top: 10px;
+                left: 10px;
+                padding: 6px;
+            }
+
+            #game-title {
+                font-size: 18px;
+            }
+
+            button.ui-btn {
+                padding: 6px 10px;
+                font-size: 20px;
+            }
+
+            .canvas-toolbar {
+                top: 10px;
+                right: 10px;
+                padding: 6px;
+                gap: 5px;
+            }
+
+            /* Переносим боковую панель вниз, над палитрой */
+            .tools-sidebar {
+                top: auto;
+                bottom: 80px;
+                right: 10px;
+                left: 10px;
+                transform: none;
+                flex-direction: row;
+                width: auto;
+                align-items: flex-end;
+                justify-content: space-between;
+                gap: 10px;
+            }
+
+            .tools-panel {
+                flex-grow: 1;
+                padding: 10px;
+            }
+
+            button.action-btn {
+                width: auto;
+                padding: 10px 15px;
+                font-size: 22px;
+                margin-bottom: 0;
+            }
+
+            #palette {
+                bottom: 10px;
+                width: 95vw;
+                padding: 8px;
+                gap: 5px;
+            }
+
+            .color-btn {
+                width: 34px;
+                height: 34px;
+            }
         }
     </style>
 </head>
 
 <body>
 
+    <!-- ЭКРАН МЕНЮ -->
     <div id="menu-screen" class="screen active">
         <h1>ВЫБЕРИ РАСКРАСКУ</h1>
-
         <div class="search-container">
             <input type="text" id="search-input" class="search-input" placeholder="🔍 Найти..." autocomplete="off">
         </div>
-
         <div id="levels-grid"></div>
-
         <div class="pagination" id="pagination-controls" style="display: none;">
             <button class="ui-btn" id="prev-page">⬅</button>
             <span id="page-info">1 / 1</span>
@@ -273,59 +570,54 @@
         </div>
     </div>
 
+    <!-- ЭКРАН ИГРЫ -->
     <div id="game-screen" class="screen">
 
-        <!-- ХОЛСТ НА ВЕСЬ ЭКРАН (НИЖНИЙ СЛОЙ) -->
-        <div class="canvas-container">
-            <div class="canvas-viewport" id="viewport">
-                <div id="canvas-transform-layer">
-                    <canvas id="paintCanvas"></canvas>
-                    <div id="svg-overlay"></div>
-                </div>
+        <!-- ХОЛСТ РИСОВАНИЯ -->
+        <div class="canvas-viewport" id="viewport">
+            <div id="canvas-transform-layer">
+                <canvas id="paintCanvas"></canvas>
+                <div id="svg-overlay"></div>
             </div>
         </div>
 
-        <!-- ОВЕРЛЕЙ ИНТЕРФЕЙСА (ВЕРХНИЙ СЛОЙ) -->
-        <div class="ui-overlay">
-            <div class="ui-top">
-                <div class="header-game">
-                    <button class="ui-btn" id="back-btn">⬅ <span class="hide-text">НАЗАД</span></button>
-                    <h1 id="game-title">Рисунок</h1>
-                </div>
-                <div class="canvas-toolbar">
-                    <button class="ui-btn tool-mode active" id="mode-draw">🖌 <span class="hide-text">Рисовать</span></button>
-                    <button class="ui-btn tool-mode" id="mode-pan">✋ <span class="hide-text">Двигать</span></button>
-                    <button class="ui-btn" id="zoom-in">➕ <span class="hide-text">Зум</span></button>
-                    <button class="ui-btn" id="zoom-out">➖ <span class="hide-text">Зум</span></button>
-                </div>
-            </div>
-
-            <div class="ui-right">
-                <div class="tools-panel">
-                    <div class="action-buttons-row">
-                        <button class="ui-btn" id="undo-btn" disabled>↩ <span class="hide-text">Отмена</span></button>
-                        <button class="ui-btn" id="redo-btn" disabled>↪ <span class="hide-text">Возврат</span></button>
-                    </div>
-                    
-                    <div style="text-align: center; color: white; -webkit-text-stroke: 1px #000; text-shadow: 2px 2px 0 #000; font-size: 16px; margin-top: 2px;">
-                        ТОЛЩИНА КИСТИ
-                    </div>
-                    <input type="range" id="brush-size" min="5" max="50" value="20">
-                    
-                    <button class="ui-btn" id="eraser-btn" style="margin-top: 5px;">🧼 <span class="hide-text">Ластик</span></button>
-                </div>
-                
-                <button class="action-btn" id="reset-btn">🗑 <span class="hide-text">Заново</span></button>
-            </div>
-
-            <div class="ui-bottom">
-                <div id="palette"></div>
-            </div>
+        <!-- ОВЕРЛЕЙ ИНТЕРФЕЙСА -->
+        <div class="header-game">
+            <button class="ui-btn" id="back-btn">⬅ <span class="hide-text">НАЗАД</span></button>
+            <h1 id="game-title">Рисунок</h1>
         </div>
 
+        <div class="canvas-toolbar">
+            <button class="ui-btn tool-mode active" id="mode-draw">🖌 <span class="hide-text">Рисовать</span></button>
+            <button class="ui-btn tool-mode" id="mode-pan">✋ <span class="hide-text">Двигать</span></button>
+            <button class="ui-btn" id="zoom-in">➕</button>
+            <button class="ui-btn" id="zoom-out">➖</button>
+        </div>
+
+        <div class="tools-sidebar">
+            <div class="tools-panel">
+                <div class="action-buttons-row">
+                    <button class="ui-btn" id="undo-btn" disabled>↩ <span class="hide-text">Отмена</span></button>
+                    <button class="ui-btn" id="redo-btn" disabled>↪ <span class="hide-text">Возврат</span></button>
+                </div>
+
+                <div
+                    style="text-align: center; color: white; -webkit-text-stroke: 1px #000; text-shadow: 2px 2px 0 #000; font-size: 16px; margin-top: 2px;">
+                    ТОЛЩИНА КИСТИ
+                </div>
+                <input type="range" id="brush-size" min="5" max="50" value="20">
+
+                <button class="ui-btn" id="eraser-btn" style="margin-top: 5px;">🧼 <span
+                        class="hide-text">Ластик</span></button>
+            </div>
+
+            <button class="action-btn" id="reset-btn">🗑 <span class="hide-text">Заново</span></button>
+        </div>
+
+        <div id="palette"></div>
     </div>
 
-    <!-- ТВОЙ ОРИГИНАЛЬНЫЙ СКРИПТ (Без единого изменения!) -->
+    <!-- ТВОЙ ОРИГИНАЛЬНЫЙ СКРИПТ (БЕЗ ЕДИНОГО ИЗМЕНЕНИЯ) -->
     <script>
         const colors = ['#ff4757', '#ffa502', '#eccc68', '#7bed9f', '#2ed573', '#70a1ff', '#5352ed', '#a4b0be', '#2f3542'];
         let currentColor = colors[0];
@@ -355,9 +647,9 @@
         const transformLayer = document.getElementById('canvas-transform-layer');
         let currentScale = 1;
         let panX = 0, panY = 0;
-        let currentMode = 'draw'; 
-        
-        let evCache = []; 
+        let currentMode = 'draw';
+
+        let evCache = [];
         let prevDiff = -1;
         let prevCenter = null;
         let isGesturing = false;
@@ -556,7 +848,7 @@
             const rect = viewport.getBoundingClientRect();
             const mouseX = e.clientX - rect.left;
             const mouseY = e.clientY - rect.top;
-            
+
             if (e.ctrlKey) {
                 const zoomFactor = Math.exp(-e.deltaY * 0.015);
                 zoomToPoint(zoomFactor, mouseX, mouseY);
@@ -603,7 +895,7 @@
 
             pCtx.fillStyle = '#ffffff';
             pCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-            svgOverlay.innerHTML = ''; 
+            svgOverlay.innerHTML = '';
             currentPaths2D = [];
 
             const measurer = document.createElement('div');
@@ -630,12 +922,12 @@
                     if (bbox && bbox.width > 0) {
                         vbX = bbox.x; vbY = bbox.y; vbW = bbox.width; vbH = bbox.height;
                     }
-                } catch (e) {}
+                } catch (e) { }
             }
 
             svgEl.setAttribute('viewBox', `${vbX} ${vbY} ${vbW} ${vbH}`);
             svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-            
+
             svgEl.style.width = '100%';
             svgEl.style.height = '100%';
 
@@ -710,7 +1002,7 @@
                 stopDrawing();
                 isGesturing = true;
                 transformLayer.classList.add('panning');
-                
+
                 prevDiff = Math.hypot(evCache[0].clientX - evCache[1].clientX, evCache[0].clientY - evCache[1].clientY);
                 prevCenter = {
                     x: (evCache[0].clientX + evCache[1].clientX) / 2,
@@ -726,7 +1018,7 @@
             const dx = e.clientX - evCache[index].clientX;
             const dy = e.clientY - evCache[index].clientY;
 
-            evCache[index] = e; 
+            evCache[index] = e;
 
             if (evCache.length === 1) {
                 if (isGesturing && currentMode === 'pan') {
@@ -747,7 +1039,7 @@
                 if (prevCenter && prevDiff > 0) {
                     panX += (curCenter.x - prevCenter.x);
                     panY += (curCenter.y - prevCenter.y);
-                    
+
                     const zoomFactor = curDiff / prevDiff;
                     const rect = viewport.getBoundingClientRect();
                     zoomToPoint(zoomFactor, curCenter.x - rect.left, curCenter.y - rect.top);
