@@ -208,15 +208,14 @@
             -webkit-text-stroke: 1px #000;
         }
 
-        /* ================= ЭКРАН ИГРЫ (ОПТИМИЗАЦИЯ ПОД МОБИЛКИ) ================= */
+        /* ================= ЭКРАН ИГРЫ (ОПТИМИЗАЦИЯ ПОД ПК - ОСТАЛОСЬ БЕЗ ИЗМЕНЕНИЙ) ================= */
 
-        /* 1. Идеальный холст в центре экрана (Математика не сломается) */
+        /* 1. Идеальный холст в центре экрана */
         .canvas-viewport {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            /* Гарантирует идеальный квадрат, чтобы не сдвинулись матрицы путей */
             width: 98vmin;
             height: 98vmin;
             border: 5px solid #000000;
@@ -227,7 +226,6 @@
             touch-action: none;
             cursor: crosshair;
             z-index: 1;
-            /* ВАЖНО: default content-box сохраняет математику холста */
             box-sizing: content-box;
         }
 
@@ -474,15 +472,13 @@
             box-shadow: 0px 0px 0px #000000;
         }
 
-        /* ================= АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ ================= */
+        /* ================= АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ (УЛЬТРАКОМПАКТНАЯ) ================= */
         @media (max-width: 800px) {
             .hide-text {
                 display: none;
             }
 
-            /* Прячем текст кнопок */
-
-            /* Холст расширяем до максимума на телефонах */
+            /* Холст расширяем до краев на телефонах */
             .canvas-viewport {
                 width: 100vw;
                 height: 100vw;
@@ -491,64 +487,110 @@
                 border-radius: 0;
             }
 
+            /* Верхние панели делаем супер компактными */
             .header-game {
-                top: 10px;
-                left: 10px;
-                padding: 6px;
+                top: 5px;
+                left: 5px;
+                padding: 4px 6px;
+                border-width: 2px;
             }
 
             #game-title {
-                font-size: 18px;
+                display: none;
+                /* Скрываем название персонажа чтобы не мешало */
             }
 
             button.ui-btn {
-                padding: 6px 10px;
-                font-size: 20px;
+                padding: 4px 8px;
+                font-size: 18px;
+                border-width: 2px;
             }
 
             .canvas-toolbar {
-                top: 10px;
-                right: 10px;
-                padding: 6px;
-                gap: 5px;
+                top: 5px;
+                right: 5px;
+                padding: 4px;
+                gap: 4px;
+                border-width: 2px;
             }
 
-            /* Переносим боковую панель вниз, над палитрой */
+            /* Инструменты сжимаем в одну узкую горизонтальную строчку над палитрой */
             .tools-sidebar {
                 top: auto;
-                bottom: 80px;
-                right: 10px;
-                left: 10px;
+                bottom: 60px;
+                right: 5px;
+                left: 5px;
                 transform: none;
                 flex-direction: row;
                 width: auto;
-                align-items: flex-end;
-                justify-content: space-between;
-                gap: 10px;
+                align-items: stretch;
+                justify-content: center;
+                gap: 5px;
             }
 
             .tools-panel {
                 flex-grow: 1;
-                padding: 10px;
+                padding: 5px 8px;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+                border-width: 2px;
+                box-shadow: 2px 2px 0px #000000;
+            }
+
+            /* Скрываем надпись "КИСТЬ" */
+            .tools-panel>div:nth-child(2) {
+                display: none;
+            }
+
+            .action-buttons-row {
+                gap: 5px;
+                flex-grow: 0;
+                width: auto;
+            }
+
+            .action-buttons-row button {
+                padding: 4px 10px;
+                font-size: 18px;
+            }
+
+            #eraser-btn {
+                width: auto;
+                margin-top: 0 !important;
+                padding: 4px 8px;
+            }
+
+            input[type="range"] {
+                max-width: 120px;
+                margin: 0;
+                flex-grow: 1;
             }
 
             button.action-btn {
                 width: auto;
-                padding: 10px 15px;
-                font-size: 22px;
+                padding: 5px 10px;
+                font-size: 18px;
                 margin-bottom: 0;
+                border-width: 2px;
+                box-shadow: 2px 2px 0px #000000;
             }
 
+            /* Палитра максимально плотная к низу */
             #palette {
-                bottom: 10px;
+                bottom: 5px;
                 width: 95vw;
-                padding: 8px;
-                gap: 5px;
+                padding: 5px;
+                gap: 4px;
+                border-width: 2px;
             }
 
             .color-btn {
-                width: 34px;
-                height: 34px;
+                width: 26px;
+                height: 26px;
+                border-width: 2px;
+                box-shadow: 2px 2px 0px #000000;
             }
         }
     </style>
@@ -597,8 +639,8 @@
         <div class="tools-sidebar">
             <div class="tools-panel">
                 <div class="action-buttons-row">
-                    <button class="ui-btn" id="undo-btn" disabled>↩ <span class="hide-text">Отмена</span></button>
-                    <button class="ui-btn" id="redo-btn" disabled>↪ <span class="hide-text">Возврат</span></button>
+                    <button class="ui-btn" id="undo-btn" disabled>↩</button>
+                    <button class="ui-btn" id="redo-btn" disabled>↪</button>
                 </div>
 
                 <div
@@ -607,11 +649,10 @@
                 </div>
                 <input type="range" id="brush-size" min="5" max="50" value="20">
 
-                <button class="ui-btn" id="eraser-btn" style="margin-top: 5px;">🧼 <span
-                        class="hide-text">Ластик</span></button>
+                <button class="ui-btn" id="eraser-btn">🧼</button>
             </div>
 
-            <button class="action-btn" id="reset-btn">🗑 <span class="hide-text">Заново</span></button>
+            <button class="action-btn" id="reset-btn">🗑</button>
         </div>
 
         <div id="palette"></div>
@@ -914,13 +955,18 @@
 
             if (svgEl.getAttribute('viewBox')) {
                 const parts = svgEl.getAttribute('viewBox').trim().split(/[\s,]+/);
-                vbX = parseFloat(parts[0]) || 0; vbY = parseFloat(parts[1]) || 0;
-                vbW = parseFloat(parts[2]) || 200; vbH = parseFloat(parts[3]) || 200;
+                vbX = parseFloat(parts[0]) || 0;
+                vbY = parseFloat(parts[1]) || 0;
+                vbW = parseFloat(parts[2]) || 200;
+                vbH = parseFloat(parts[3]) || 200;
             } else {
                 try {
                     const bbox = svgEl.getBBox();
                     if (bbox && bbox.width > 0) {
-                        vbX = bbox.x; vbY = bbox.y; vbW = bbox.width; vbH = bbox.height;
+                        vbX = bbox.x;
+                        vbY = bbox.y;
+                        vbW = bbox.width;
+                        vbH = bbox.height;
                     }
                 } catch (e) { }
             }
