@@ -30,7 +30,6 @@
             font-family: 'Lilita One', cursive, sans-serif;
             touch-action: none;
             user-select: none;
-            -webkit-user-select: none;
         }
 
         @keyframes scrollBg {
@@ -148,7 +147,7 @@
             gap: 15px;
             flex-grow: 1;
             align-items: stretch;
-            min-height: 0; 
+            min-height: 0; /* Важно для прокрутки на маленьких экранах */
         }
 
         .canvas-area {
@@ -171,7 +170,7 @@
         .tool-mode { background: #1579ff; flex-grow: 1; }
         .tool-mode.active { background: #21ff00; }
 
-        /* ХОЛСТ И ВЕКТОРНЫЙ СЛОЙ */
+        /* ХОЛСТ */
         .canvas-viewport {
             width: 100%; max-width: 100%; height: 100%; max-height: 100%;
             aspect-ratio: 1 / 1; border: 5px solid #000000; border-radius: 8px;
@@ -235,19 +234,22 @@
         button.action-btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0px #000000; }
 
         /* ================= МЕДИАЗАПРОСЫ ДЛЯ МОБИЛОК ================= */
+
+        /* ПОРТРЕТНАЯ (Вертикальная) ориентация телефона */
         @media (max-width: 800px) and (orientation: portrait) {
             .game-layout { flex-direction: column; overflow-y: auto; }
             .tools-sidebar { width: 100%; overflow-y: visible; }
-            .canvas-viewport { max-height: 55vh; } 
-            .hide-text { display: none; } 
+            .canvas-viewport { max-height: 55vh; } /* Ограничиваем холст, чтобы влезли инструменты */
+            .hide-text { display: none; } /* Прячем текст на кнопках */
             button.ui-btn { padding: 8px; font-size: 18px; }
         }
 
+        /* ЛАНДШАФТНАЯ (Горизонтальная) ориентация телефона */
         @media (max-width: 900px) and (orientation: landscape) {
             .game-layout { flex-direction: row; }
             .canvas-viewport { max-width: 60vw; max-height: 85vh; }
             .tools-sidebar { width: 40vw; padding-right: 5px; }
-            .hide-text { display: none; } 
+            .hide-text { display: none; } /* Прячем текст */
             .header-game h1 { font-size: 16px; }
             .header-game { margin-bottom: 5px; padding: 4px; }
             .canvas-toolbar { padding: 4px; gap: 4px; }
@@ -256,6 +258,7 @@
             .color-btn { width: 30px; height: 30px; }
         }
 
+        /* Скрывать текст на маленьких экранах везде */
         @media (max-width: 500px) { .hide-text { display: none; } }
     </style>
 </head>
@@ -264,10 +267,13 @@
 
     <div id="menu-screen" class="screen active">
         <h1>ВЫБЕРИ РАСКРАСКУ</h1>
+
         <div class="search-container">
             <input type="text" id="search-input" class="search-input" placeholder="🔍 Найти..." autocomplete="off">
         </div>
+
         <div id="levels-grid"></div>
+
         <div class="pagination" id="pagination-controls" style="display: none;">
             <button class="ui-btn" id="prev-page">⬅</button>
             <span id="page-info">1 / 1</span>
@@ -312,7 +318,9 @@
                     
                     <button class="ui-btn" id="eraser-btn" style="margin-top: 5px;">🧼 <span class="hide-text">Ластик</span></button>
                 </div>
+
                 <div id="palette"></div>
+                
                 <button class="action-btn" id="reset-btn">Начать заново</button>
             </div>
         </div>
@@ -331,6 +339,7 @@
         const brushSizeInput = document.getElementById('brush-size');
         const eraserBtn = document.getElementById('eraser-btn');
         const searchInput = document.getElementById('search-input');
+
         const undoBtn = document.getElementById('undo-btn');
         const redoBtn = document.getElementById('redo-btn');
 
@@ -355,7 +364,45 @@
 
         let currentPaths2D = [];
         let activePath = null;
-        let isDrawing = false;totalPages > 1) {
+        let isDrawing = false;
+        let lastX = 0, lastY = 0;
+
+        let undoStack = [];
+        let redoStack = [];
+        const MAX_HISTORY = 15;
+
+        const ITEMS_PER_PAGE = 9;
+        let currentPage = 0;
+        let searchQuery = "";
+
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase().trim();
+            currentPage = 0;
+            initMenu();
+        });
+
+        function initMenu() {
+            levelsGrid.innerHTML = '';
+
+            if (typeof pictures === 'undefined' || pictures.length === 0) {
+                levelsGrid.innerHTML = "<div class='empty-search'>Нет уровней. Добавьте их через генератор!</div>";
+                document.getElementById('pagination-controls').style.display = 'none';
+                return;
+            }
+
+            const filteredPics = pictures
+                .map((pic, index) => ({ pic, originalIndex: index }))
+                .filter(item => item.pic.title.toLowerCase().includes(searchQuery));
+
+            if (filteredPics.length === 0) {
+                levelsGrid.innerHTML = "<div class='empty-search'>Ничего не найдено 😔</div>";
+                document.getElementById('pagination-controls').style.display = 'none';
+                return;
+            }
+
+            const totalPages = Math.ceil(filteredPics.length / ITEMS_PER_PAGE);
+
+            if (totalPages > 1) {
                 document.getElementById('pagination-controls').style.display = 'flex';
                 document.getElementById('page-info').innerText = `${currentPage + 1} / ${totalPages}`;
                 document.getElementById('prev-page').disabled = currentPage === 0;
@@ -393,9 +440,12 @@
                         vbH = parseFloat(svgEl.getAttribute('height')) || 200;
                     }
 
-                    const padX = vbW * 0.1; const padY = vbH * 0.1;
+                    const padX = vbW * 0.1;
+                    const padY = vbH * 0.1;
+
                     svgEl.setAttribute('viewBox', `${vbX - padX} ${vbY - padY} ${vbW + padX * 2} ${vbH + padY * 2}`);
-                    svgEl.removeAttribute('width'); svgEl.removeAttribute('height');
+                    svgEl.removeAttribute('width');
+                    svgEl.removeAttribute('height');
                     svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
                     svgEl.style.overflow = 'visible';
 
@@ -414,7 +464,10 @@
             });
         }
 
-        document.getElementById('prev-page').addEventListener('click', () => { if (currentPage > 0) { currentPage--; initMenu(); } });
+        document.getElementById('prev-page').addEventListener('click', () => {
+            if (currentPage > 0) { currentPage--; initMenu(); }
+        });
+
         document.getElementById('next-page').addEventListener('click', () => {
             const filteredCount = searchQuery ? pictures.filter(p => p.title.toLowerCase().includes(searchQuery)).length : pictures.length;
             const totalPages = Math.ceil(filteredCount / ITEMS_PER_PAGE);
@@ -492,6 +545,7 @@
             panX = viewportX - (viewportX - panX) * actualMultiplier;
             panY = viewportY - (viewportY - panY) * actualMultiplier;
             currentScale = newScale;
+
             applyTransform();
         }
 
@@ -538,42 +592,54 @@
             const pic = pictures[index];
             document.getElementById('game-title').innerText = pic.title;
 
-            currentScale = 1; panX = 0; panY = 0; applyTransform();
+            currentScale = 1; panX = 0; panY = 0;
+            applyTransform();
             document.getElementById('mode-draw').click();
 
-            undoStack = []; redoStack = []; updateHistoryButtons();
-            pCtx.fillStyle = '#ffffff'; pCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-            svgOverlay.innerHTML = ''; currentPaths2D = [];
+            undoStack = []; redoStack = [];
+            updateHistoryButtons();
+
+            pCtx.fillStyle = '#ffffff';
+            pCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+            svgOverlay.innerHTML = ''; 
+            currentPaths2D = [];
+
+            const measurer = document.createElement('div');
+            measurer.style.cssText = 'position:absolute; top:0; left:0; opacity:0; pointer-events:none; width:800px; height:800px; overflow:hidden; z-index:-100;';
 
             let safeSvgStr = pic.svg;
             if (!safeSvgStr.includes('fill')) {
                 safeSvgStr = safeSvgStr.replace('<path ', '<path fill="#ffffff" stroke="#000000" stroke-width="3" ');
                 safeSvgStr = safeSvgStr.replace(/<path /g, '<path fill="#ffffff" stroke="#000000" stroke-width="3" ');
             }
-            
-            const wrapper = document.createElement('div');
-            wrapper.innerHTML = safeSvgStr;
-            const svgEl = wrapper.querySelector('svg');
+            measurer.innerHTML = safeSvgStr;
+            document.body.appendChild(measurer);
 
+            const svgEl = measurer.querySelector('svg');
             let vbX = 0, vbY = 0, vbW = 200, vbH = 200;
+
             if (svgEl.getAttribute('viewBox')) {
                 const parts = svgEl.getAttribute('viewBox').trim().split(/[\s,]+/);
                 vbX = parseFloat(parts[0]) || 0; vbY = parseFloat(parts[1]) || 0;
                 vbW = parseFloat(parts[2]) || 200; vbH = parseFloat(parts[3]) || 200;
+            } else {
+                try {
+                    const bbox = svgEl.getBBox();
+                    if (bbox && bbox.width > 0) {
+                        vbX = bbox.x; vbY = bbox.y; vbW = bbox.width; vbH = bbox.height;
+                    }
+                } catch (e) {}
             }
 
-            // === ИСПРАВЛЕНИЕ СМЕЩЕНИЯ (100% ТОЧНОСТЬ МАТРИЦ) ===
-            // 1. Настраиваем SVG для экрана
             svgEl.setAttribute('viewBox', `${vbX} ${vbY} ${vbW} ${vbH}`);
             svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-            svgEl.style.width = '100%'; svgEl.style.height = '100%'; svgEl.style.display = 'block';
+            
+            svgEl.style.width = '100%';
+            svgEl.style.height = '100%';
 
-            // 2. Добавляем в видимый DOM (это ГАРАНТИРУЕТ, что браузер просчитает матрицы без багов)
-            svgOverlay.appendChild(svgEl);
-
-            // 3. Высчитываем масштабы 
             const scale = Math.min(CANVAS_SIZE / vbW, CANVAS_SIZE / vbH);
-            const finalW = vbW * scale; const finalH = vbH * scale;
+            const finalW = vbW * scale;
+            const finalH = vbH * scale;
             const offsetX = (CANVAS_SIZE - finalW) / 2;
             const offsetY = (CANVAS_SIZE - finalH) / 2;
 
@@ -586,37 +652,42 @@
 
                 const pathMatrix = pathNode.getScreenCTM();
                 let relativeMatrix = new DOMMatrix();
-                // Получаем "чистую" математику контура без влияния экрана
                 if (rootMatrix && pathMatrix) { relativeMatrix = rootMatrix.inverse().multiply(pathMatrix); }
 
                 let m = new DOMMatrix().translate(offsetX, offsetY).scale(scale, scale).translate(-vbX, -vbY).multiply(relativeMatrix);
                 let p = new Path2D(d);
                 let scaledPath = new Path2D();
                 scaledPath.addPath(p, m);
+
                 currentPaths2D.push(scaledPath);
             });
+
+            svgOverlay.appendChild(svgEl);
+            document.body.removeChild(measurer);
 
             menuScreen.classList.remove('active');
             gameScreen.classList.add('active');
         }
 
         document.getElementById('reset-btn').addEventListener('click', () => {
-            saveState(); pCtx.fillStyle = '#ffffff'; pCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+            saveState();
+            pCtx.fillStyle = '#ffffff';
+            pCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
         });
 
         document.getElementById('back-btn').addEventListener('click', () => {
-            gameScreen.classList.remove('active'); menuScreen.classList.add('active'); showInterstitialAd();
+            gameScreen.classList.remove('active');
+            menuScreen.classList.add('active');
+            showInterstitialAd();
         });
 
         function getCanvasPos(clientX, clientY) {
             const rect = paintCanvas.getBoundingClientRect();
-            // Возвращаем scaleX, чтобы кисть сохраняла размер независимо от зума!
-            const scaleX = CANVAS_SIZE / rect.width;
-            const scaleY = CANVAS_SIZE / rect.height;
+            const scaleX = paintCanvas.width / rect.width;
+            const scaleY = paintCanvas.height / rect.height;
             return {
                 x: (clientX - rect.left) * scaleX,
-                y: (clientY - rect.top) * scaleY,
-                brushScale: scaleX
+                y: (clientY - rect.top) * scaleY
             };
         }
 
@@ -626,20 +697,32 @@
 
             if (evCache.length === 1) {
                 if (currentMode === 'pan') {
-                    isGesturing = true; transformLayer.classList.add('panning'); viewport.style.cursor = 'grabbing';
+                    isGesturing = true;
+                    transformLayer.classList.add('panning');
+                    viewport.style.cursor = 'grabbing';
                 } else {
                     const pos = getCanvasPos(e.clientX, e.clientY);
                     startDrawing(pos);
                 }
             } else if (evCache.length === 2) {
-                // ОТМЕНА ФАНТОМНОЙ ТОЧКИ ПРИ ЩИПКЕ
+                // МАГИЯ ОТМЕНЫ ФАНТОМНОЙ ТОЧКИ:
+                // Если мы только что поставили точку 1-м пальцем, но тут же опустили 2-й палец,
+                // мы отменяем эту нарисованную точку через Undo!
                 if (isDrawing && undoStack.length > 0) {
-                    undo(); redoStack = []; updateHistoryButtons();
+                    undo(); // Удаляем точку
+                    redoStack = []; // Очищаем стек возврата, чтобы игрок не вернул фантом
+                    updateHistoryButtons();
                 }
-                stopDrawing(); isGesturing = true; transformLayer.classList.add('panning');
+
+                stopDrawing();
+                isGesturing = true;
+                transformLayer.classList.add('panning');
                 
                 prevDiff = Math.hypot(evCache[0].clientX - evCache[1].clientX, evCache[0].clientY - evCache[1].clientY);
-                prevCenter = { x: (evCache[0].clientX + evCache[1].clientX) / 2, y: (evCache[0].clientY + evCache[1].clientY) / 2 };
+                prevCenter = {
+                    x: (evCache[0].clientX + evCache[1].clientX) / 2,
+                    y: (evCache[0].clientY + evCache[1].clientY) / 2
+                };
             }
         });
 
@@ -649,34 +732,51 @@
 
             const dx = e.clientX - evCache[index].clientX;
             const dy = e.clientY - evCache[index].clientY;
+
             evCache[index] = e; 
 
             if (evCache.length === 1) {
                 if (isGesturing && currentMode === 'pan') {
-                    panX += dx; panY += dy; applyTransform();
+                    panX += dx;
+                    panY += dy;
+                    applyTransform();
                 } else if (isDrawing) {
                     const pos = getCanvasPos(e.clientX, e.clientY);
                     draw(pos);
                 }
             } else if (evCache.length === 2 && isGesturing) {
                 const curDiff = Math.hypot(evCache[0].clientX - evCache[1].clientX, evCache[0].clientY - evCache[1].clientY);
-                const curCenter = { x: (evCache[0].clientX + evCache[1].clientX) / 2, y: (evCache[0].clientY + evCache[1].clientY) / 2 };
+                const curCenter = {
+                    x: (evCache[0].clientX + evCache[1].clientX) / 2,
+                    y: (evCache[0].clientY + evCache[1].clientY) / 2
+                };
 
                 if (prevCenter && prevDiff > 0) {
-                    panX += (curCenter.x - prevCenter.x); panY += (curCenter.y - prevCenter.y);
+                    panX += (curCenter.x - prevCenter.x);
+                    panY += (curCenter.y - prevCenter.y);
+                    
                     const zoomFactor = curDiff / prevDiff;
                     const rect = viewport.getBoundingClientRect();
                     zoomToPoint(zoomFactor, curCenter.x - rect.left, curCenter.y - rect.top);
                 }
-                prevDiff = curDiff; prevCenter = curCenter;
+
+                prevDiff = curDiff;
+                prevCenter = curCenter;
             }
         });
 
         function handlePointerUp(e) {
             evCache = evCache.filter(ev => ev.pointerId !== e.pointerId);
-            if (evCache.length < 2) { prevDiff = -1; prevCenter = null; }
+
+            if (evCache.length < 2) {
+                prevDiff = -1;
+                prevCenter = null;
+            }
+
             if (evCache.length === 0) {
-                isGesturing = false; stopDrawing(); transformLayer.classList.remove('panning');
+                isGesturing = false;
+                stopDrawing();
+                transformLayer.classList.remove('panning');
                 viewport.style.cursor = currentMode === 'pan' ? 'grab' : 'crosshair';
             }
         }
@@ -684,12 +784,13 @@
         window.addEventListener('pointerup', handlePointerUp);
         window.addEventListener('pointercancel', handlePointerUp);
         viewport.addEventListener('pointerout', (e) => {
-            if (evCache.length === 1 && !isGesturing && e.pointerType === 'mouse') { handlePointerUp(e); }
+            if (evCache.length === 1 && !isGesturing && e.pointerType === 'mouse') {
+                handlePointerUp(e);
+            }
         });
 
         function startDrawing(pos) {
             activePath = null;
-            // Ищем контур, в который попал клик
             for (let i = currentPaths2D.length - 1; i >= 0; i--) {
                 if (pCtx.isPointInPath(currentPaths2D[i], pos.x, pos.y)) {
                     activePath = currentPaths2D[i];
@@ -698,18 +799,21 @@
             }
 
             if (activePath) {
-                saveState(); isDrawing = true; lastX = pos.x; lastY = pos.y; drawDot(pos);
+                saveState();
+                isDrawing = true;
+                lastX = pos.x; lastY = pos.y;
+                drawDot(pos.x, pos.y);
             }
         }
 
         function draw(pos) {
             if (!isDrawing || !activePath) return;
             pCtx.save();
-            pCtx.clip(activePath); // Жесткая обрезка по границам фигуры
+            pCtx.clip(activePath);
 
-            pCtx.lineCap = 'round'; pCtx.lineJoin = 'round';
-            // Кисть сохраняет свой размер на экране, независимо от зума картинки
-            pCtx.lineWidth = currentBrushSize * pos.brushScale; 
+            pCtx.lineCap = 'round';
+            pCtx.lineJoin = 'round';
+            pCtx.lineWidth = currentBrushSize * (CANVAS_SIZE / paintCanvas.clientWidth) * currentScale;
             pCtx.strokeStyle = isEraser ? '#ffffff' : currentColor;
 
             pCtx.beginPath();
@@ -721,32 +825,39 @@
             lastX = pos.x; lastY = pos.y;
         }
 
-        function drawDot(pos) {
+        function drawDot(x, y) {
             pCtx.save();
             pCtx.clip(activePath);
             pCtx.fillStyle = isEraser ? '#ffffff' : currentColor;
             pCtx.beginPath();
-            let radius = (currentBrushSize * pos.brushScale) / 2;
-            pCtx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
+            let radius = (currentBrushSize * (CANVAS_SIZE / paintCanvas.clientWidth) * currentScale) / 2;
+            pCtx.arc(x, y, radius, 0, Math.PI * 2);
             pCtx.fill();
             pCtx.restore();
         }
 
-        function stopDrawing() { isDrawing = false; activePath = null; }
+        function stopDrawing() {
+            isDrawing = false;
+            activePath = null;
+        }
 
-        initPalette(); initMenu();
+        initPalette();
+        initMenu();
 
         // === ИНТЕГРАЦИЯ С ЯНДЕКС ИГРАМИ ===
         let ys;
         YaGames.init().then(_ys => {
-            ys = _ys; ys.features.appVisibility.ready(); console.log('Yandex SDK загружен');
+            ys = _ys;
+            ys.features.appVisibility.ready();
+            console.log('Yandex SDK загружен');
         }).catch(err => console.error('Ошибка Yandex SDK:', err));
 
         function showInterstitialAd() {
             if (ys && ys.adv) {
                 ys.adv.showFullscreenAdv({
                     callbacks: {
-                        onClose: function () {}, onError: function (error) {}
+                        onClose: function () { console.log('Реклама закрыта'); },
+                        onError: function (error) { console.log('Ошибка рекламы', error); }
                     }
                 });
             }
