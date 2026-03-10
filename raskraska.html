@@ -946,11 +946,11 @@
             svgOverlay.innerHTML = '';
             currentPaths2D = [];
 
-            // *** ИСПРАВЛЕНИЕ СМЕЩЕНИЯ КОНТУРОВ ***
-            const viewportRect = viewport.getBoundingClientRect(); // 1. Получаем реальный размер холста
             const measurer = document.createElement('div');
-            // 2. Задаем измерителю тот же размер, что и у видимого холста
-            measurer.style.cssText = `position:absolute; top:0; left:0; opacity:0; pointer-events:none; width:${viewportRect.width}px; height:${viewportRect.height}px; overflow:hidden; z-index:-100;`;
+            // *** ИСПРАВЛЕНИЕ: Задаем измерителю ФИКСИРОВАННЫЙ КВАДРАТНЫЙ РАЗМЕР,
+            // чтобы getScreenCTM() всегда работал с одинаковыми пропорциями (1:1).
+            // Это устраняет смещение контуров на неквадратных экранах.
+            measurer.style.cssText = 'position:absolute; top:0; left:0; opacity:0; pointer-events:none; width:800px; height:800px; overflow:hidden; z-index:-100;';
             
             let safeSvgStr = pic.svg;
             if (!safeSvgStr.includes('fill')) {
