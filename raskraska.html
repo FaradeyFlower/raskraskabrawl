@@ -9,12 +9,14 @@
     <script src="https://yandex.ru/games/sdk/v2"></script>
     <script src="levels.js"></script>
 
-    <!-- Шрифт Brawl Stars -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
-
     <style>
+        @font-face {
+            font-family: 'MyCustomFont';
+            /* Придумываем имя шрифту */
+            src: url('MyFont.ttf') format('truetype');
+            /* Указываем точное название твоего файла */
+        }
+
         /* ================= НАСТРОЙКА ФОНА И СТИЛЯ ================= */
         body {
             margin: 0;
@@ -28,7 +30,7 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
-            font-family: 'Lilita One', cursive, sans-serif;
+            font-family: 'MyCustomFont', cursive, sans-serif;
             touch-action: none;
             user-select: none;
         }
@@ -99,7 +101,7 @@
             font-size: clamp(22px, 5vw, 36px);
             text-transform: uppercase;
             letter-spacing: 1px;
-            -webkit-text-stroke: 2px #000000;
+            -webkit-text-stroke: 0.7px #000000;
             text-shadow: 3px 3px 0px #000000;
             text-align: center;
         }
@@ -118,7 +120,7 @@
             border-radius: 8px;
             font-size: 18px;
             box-sizing: border-box;
-            font-family: 'Lilita One', cursive;
+            font-family: 'MyCustomFont', cursive;
             box-shadow: 4px 4px 0px #000000;
             outline: none;
             transition: 0.1s;
@@ -182,7 +184,7 @@
             color: #ffffff;
             font-size: clamp(12px, 3vw, 16px);
             text-transform: uppercase;
-            -webkit-text-stroke: 1px #000000;
+            -webkit-text-stroke: 0.5px #000000;
             text-shadow: 2px 2px 0px #000000;
             text-align: center;
             white-space: nowrap;
@@ -359,10 +361,10 @@
             padding: 8px 12px;
             border-radius: 6px;
             cursor: pointer;
-            font-family: 'Lilita One', cursive;
+            font-family: 'MyCustomFont', cursive;
             font-size: 16px;
             color: #ffffff;
-            -webkit-text-stroke: 1px #000000;
+            -webkit-text-stroke: 0.5px #000000;
             text-shadow: 2px 2px 0px #000000;
             box-shadow: 3px 3px 0px #000000;
             transition: all 0.1s;
@@ -458,7 +460,7 @@
             border: 4px solid #000000;
             border-radius: 8px;
             cursor: pointer;
-            font-family: 'Lilita One', cursive;
+            font-family: 'MyCustomFont', cursive;
             -webkit-text-stroke: 1px #000000;
             text-shadow: 2px 2px 0px #000000;
             box-shadow: 4px 4px 0px #000000;
@@ -472,19 +474,22 @@
             box-shadow: 0px 0px 0px #000000;
         }
 
-        /* ================= АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ (УЛЬТРАКОМПАКТНАЯ) ================= */
+        /* ================= АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ (ПОЛНЫЙ ЭКРАН) ================= */
         @media (max-width: 800px) {
             .hide-text {
                 display: none;
             }
 
-            /* Холст расширяем до краев на телефонах */
+            /* *** ИЗМЕНЕНИЕ: Холст на 100% ширины и высоты экрана *** */
             .canvas-viewport {
                 width: 100vw;
-                height: 100vw;
-                border-left: none;
-                border-right: none;
+                height: 100vh;
+                top: 0;
+                left: 0;
+                transform: none; /* Убираем центрирование */
+                border: none;
                 border-radius: 0;
+                box-shadow: none;
             }
 
             /* Верхние панели делаем супер компактными */
@@ -1045,13 +1050,12 @@
                     startDrawing(pos);
                 }
             } else if (evCache.length >= 2) {
-                // ИСПРАВЛЕНИЕ 1: Надёжное удаление точки при двойном касании (зум/щипок)
                 if (isDrawing && undoStack.length > 0) {
-                    undo(); 
-                    redoStack = []; 
+                    undo();
+                    redoStack = [];
                     updateHistoryButtons();
                 }
-                
+
                 stopDrawing();
                 isGesturing = true;
                 transformLayer.classList.add('panning');
@@ -1151,8 +1155,7 @@
 
             pCtx.lineCap = 'round';
             pCtx.lineJoin = 'round';
-            
-            // ИСПРАВЛЕНИЕ 2: Заменили "* currentScale" на "/ currentScale", чтобы кисть не раздувалась при зуме
+
             pCtx.lineWidth = currentBrushSize * (CANVAS_SIZE / paintCanvas.clientWidth) / currentScale;
             pCtx.strokeStyle = isEraser ? '#ffffff' : currentColor;
 
@@ -1170,8 +1173,7 @@
             pCtx.clip(activePath);
             pCtx.fillStyle = isEraser ? '#ffffff' : currentColor;
             pCtx.beginPath();
-            
-            // ИСПРАВЛЕНИЕ 2: Заменили "* currentScale" на "/ currentScale" для точки
+
             let radius = (currentBrushSize * (CANVAS_SIZE / paintCanvas.clientWidth) / currentScale) / 2;
             pCtx.arc(x, y, radius, 0, Math.PI * 2);
             pCtx.fill();
