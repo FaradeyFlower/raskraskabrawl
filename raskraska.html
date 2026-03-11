@@ -8,7 +8,6 @@
 
     <script src="https://yandex.ru/games/sdk/v2"></script>
     <script src="levels.js"></script>
-    <!-- ИЗМЕНЕНИЕ 1: Подключаем библиотеку для круга цветов -->
     <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
 
     <style>
@@ -332,7 +331,6 @@
         
         <div id="palette"></div>
 
-        <!-- ИЗМЕНЕНИЕ 2: Контейнер для круга цветов -->
         <div id="color-wheel-container">
             <div class="color-wheel-mount"></div>
         </div>
@@ -341,94 +339,25 @@
     <script>
         const mainColors = ['#ff4757', '#ffa502', '#eccc68', '#7bed9f', '#2ed573', '#70a1ff', '#5352ed', '#2f3542'];
         let currentColor = mainColors[0];
-        let colorPicker; // Переменная для хранения экземпляра круга
+        let colorPicker;
         
         let currentBrushSize = 20; let isEraser = false; const menuScreen = document.getElementById('menu-screen'); const gameScreen = document.getElementById('game-screen'); const levelsGrid = document.getElementById('levels-grid'); const paletteContainer = document.getElementById('palette'); const brushSizeInput = document.getElementById('brush-size'); const eraserBtn = document.getElementById('eraser-btn'); const searchInput = document.getElementById('search-input'); const undoBtn = document.getElementById('undo-btn'); const redoBtn = document.getElementById('redo-btn'); const paintCanvas = document.getElementById('paintCanvas'); const pCtx = paintCanvas.getContext('2d', { willReadFrequently: true }); const svgOverlay = document.getElementById('svg-overlay'); const CANVAS_SIZE = 1600; paintCanvas.width = CANVAS_SIZE; paintCanvas.height = CANVAS_SIZE; const viewport = document.getElementById('viewport'); const artboard = document.getElementById('artboard'); const transformLayer = document.getElementById('canvas-transform-layer'); let currentScale = 1; let panX = 0, panY = 0; let currentMode = 'draw'; let evCache = []; let prevDiff = -1; let prevCenter = null; let isGesturing = false; let currentPaths2D = []; let activePath = null; let isDrawing = false; let lastX = 0, lastY = 0; let undoStack = []; let redoStack = []; const MAX_HISTORY = 15; const ITEMS_PER_PAGE = 9; let currentPage = 0; let searchQuery = "";
         
+        // *** ИЗМЕНЕНИЕ 1: Добавляем таймер для отложенного действия ***
+        let singlePointerTimeout;
+
         searchInput.addEventListener('input', (e) => { searchQuery = e.target.value.toLowerCase().trim(); currentPage = 0; initMenu(); });
         
         function initMenu() { /* ... код без изменений ... */ levelsGrid.innerHTML = ''; if (typeof pictures === 'undefined' || pictures.length === 0) { levelsGrid.innerHTML = "<div class='empty-search'>Нет уровней. Добавьте их через генератор!</div>"; document.getElementById('pagination-controls').style.display = 'none'; return; } const filteredPics = pictures.map((pic, index) => ({ pic, originalIndex: index })).filter(item => item.pic.title.toLowerCase().includes(searchQuery)); if (filteredPics.length === 0) { levelsGrid.innerHTML = "<div class='empty-search'>Ничего не найдено 😔</div>"; document.getElementById('pagination-controls').style.display = 'none'; return; } const totalPages = Math.ceil(filteredPics.length / ITEMS_PER_PAGE); if (totalPages > 1) { document.getElementById('pagination-controls').style.display = 'flex'; document.getElementById('page-info').innerText = `${currentPage + 1} / ${totalPages}`; document.getElementById('prev-page').disabled = currentPage === 0; document.getElementById('next-page').disabled = currentPage >= totalPages - 1; } else { document.getElementById('pagination-controls').style.display = 'none'; } const startIdx = currentPage * ITEMS_PER_PAGE; const endIdx = startIdx + ITEMS_PER_PAGE; const currentPics = filteredPics.slice(startIdx, endIdx); currentPics.forEach((item) => { const pic = item.pic; const globalIndex = item.originalIndex; let safeSvgStr = pic.svg; if (!safeSvgStr.includes('fill')) { safeSvgStr = safeSvgStr.replace('<path ', '<path fill="#ffffff" stroke="#000000" stroke-width="3" '); safeSvgStr = safeSvgStr.replace(/<path /g, '<path fill="#ffffff" stroke="#000000" stroke-width="3" '); } const wrapper = document.createElement('div'); wrapper.innerHTML = safeSvgStr; const svgEl = wrapper.querySelector('svg'); if (svgEl) { let vbX = 0, vbY = 0, vbW = 200, vbH = 200; if (svgEl.getAttribute('viewBox')) { const parts = svgEl.getAttribute('viewBox').trim().split(/[\s,]+/); vbX = parseFloat(parts[0]) || 0; vbY = parseFloat(parts[1]) || 0; vbW = parseFloat(parts[2]) || 200; vbH = parseFloat(parts[3]) || 200; } else { vbW = parseFloat(svgEl.getAttribute('width')) || 200; vbH = parseFloat(svgEl.getAttribute('height')) || 200; } const padX = vbW * 0.1; const padY = vbH * 0.1; svgEl.setAttribute('viewBox', `${vbX - padX} ${vbY - padY} ${vbW + padX * 2} ${vbH + padY * 2}`); svgEl.removeAttribute('width'); svgEl.removeAttribute('height'); svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet'); svgEl.style.overflow = 'visible'; const card = document.createElement('div'); card.className = 'level-card'; card.appendChild(svgEl); const titleEl = document.createElement('div'); titleEl.className = 'level-title'; titleEl.innerText = pic.title; card.appendChild(titleEl); card.onclick = () => openLevel(globalIndex); levelsGrid.appendChild(card); } }); }
         document.getElementById('prev-page').addEventListener('click', () => { if (currentPage > 0) { currentPage--; initMenu(); } }); document.getElementById('next-page').addEventListener('click', () => { const filteredCount = searchQuery ? pictures.filter(p => p.title.toLowerCase().includes(searchQuery)).length : pictures.length; const totalPages = Math.ceil(filteredCount / ITEMS_PER_PAGE); if (currentPage < totalPages - 1) { currentPage++; initMenu(); } });
         
-        function selectColor(color, btnEl) {
-            isEraser = false;
-            currentColor = color;
-            eraserBtn.classList.remove('active');
-            
-            // Снимаем выделение со всех кнопок и ставим на нужную
-            document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-            if (btnEl) btnEl.classList.add('active');
-            
-            // Если выбран цвет не из основной палитры, подсвечиваем кнопку "..."
-            if (!mainColors.includes(color) && !isEraser) {
-                document.querySelector('.more-colors-btn').classList.add('active');
-            }
-        }
-
-        function createColorButton(color) {
-            const btn = document.createElement('div');
-            btn.className = 'color-btn';
-            btn.style.backgroundColor = color;
-            btn.onclick = (e) => {
-                e.stopPropagation();
-                selectColor(color, btn);
-                if (colorPicker) colorPicker.color.hexString = color;
-            };
-            return btn;
-        }
-
-        function initPalette() {
-            paletteContainer.innerHTML = '';
-
-            mainColors.forEach(color => {
-                const btn = createColorButton(color);
-                paletteContainer.appendChild(btn);
-            });
-            
-            paletteContainer.firstChild.classList.add('active');
-
-            const moreBtn = document.createElement('div');
-            moreBtn.className = 'color-btn more-colors-btn';
-            moreBtn.innerHTML = '...';
-            moreBtn.onclick = (e) => {
-                e.stopPropagation();
-                document.getElementById('color-wheel-container').classList.add('visible');
-                colorPicker.color.hexString = currentColor; // Синхронизируем цвет
-            };
-            paletteContainer.appendChild(moreBtn);
-        }
+        function selectColor(color, btnEl) { isEraser = false; currentColor = color; eraserBtn.classList.remove('active'); document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active')); if (btnEl) btnEl.classList.add('active'); if (!mainColors.includes(color) && !isEraser) { document.querySelector('.more-colors-btn').classList.add('active'); } }
+        function createColorButton(color) { const btn = document.createElement('div'); btn.className = 'color-btn'; btn.style.backgroundColor = color; btn.onclick = (e) => { e.stopPropagation(); selectColor(color, btn); if (colorPicker) colorPicker.color.hexString = color; }; return btn; }
+        function initPalette() { paletteContainer.innerHTML = ''; mainColors.forEach(color => { const btn = createColorButton(color); paletteContainer.appendChild(btn); }); paletteContainer.firstChild.classList.add('active'); const moreBtn = document.createElement('div'); moreBtn.className = 'color-btn more-colors-btn'; moreBtn.innerHTML = '...'; moreBtn.onclick = (e) => { e.stopPropagation(); document.getElementById('color-wheel-container').classList.add('visible'); colorPicker.color.hexString = currentColor; }; paletteContainer.appendChild(moreBtn); }
+        function initColorWheel() { const wheelContainer = document.getElementById('color-wheel-container'); colorPicker = new iro.ColorPicker('.color-wheel-mount', { width: 280, color: currentColor, borderWidth: 4, borderColor: "#000", layout: [ { component: iro.ui.Wheel } ] }); colorPicker.on('input:end', function(color) { selectColor(color.hexString, null); wheelContainer.classList.remove('visible'); }); wheelContainer.addEventListener('click', (e) => { if (e.target === wheelContainer) { wheelContainer.classList.remove('visible'); } }); }
         
-        // ИЗМЕНЕНИЕ 3: Функция инициализации круга цветов
-        function initColorWheel() {
-            const wheelContainer = document.getElementById('color-wheel-container');
-            colorPicker = new iro.ColorPicker('.color-wheel-mount', {
-                width: 280,
-                color: currentColor,
-                borderWidth: 4,
-                borderColor: "#000",
-                layout: [ { component: iro.ui.Wheel } ]
-            });
-
-            // Когда пользователь закончил выбирать цвет
-            colorPicker.on('input:end', function(color) {
-                selectColor(color.hexString, null); // Выбираем цвет, но не подсвечиваем кнопку
-                wheelContainer.classList.remove('visible');
-            });
-
-            // Закрытие по клику вне круга
-            wheelContainer.addEventListener('click', (e) => {
-                if (e.target === wheelContainer) {
-                    wheelContainer.classList.remove('visible');
-                }
-            });
-        }
-
         brushSizeInput.oninput = (e) => currentBrushSize = e.target.value; 
-        eraserBtn.onclick = () => { 
-            isEraser = true; 
-            document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active')); 
-            eraserBtn.classList.add('active');
-        };
+        eraserBtn.onclick = () => { isEraser = true; document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active')); eraserBtn.classList.add('active'); };
 
         function saveState() { undoStack.push(pCtx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE)); if (undoStack.length > MAX_HISTORY) undoStack.shift(); redoStack = []; updateHistoryButtons(); }
         function undo() { if (undoStack.length > 0) { redoStack.push(pCtx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE)); const previousState = undoStack.pop(); pCtx.putImageData(previousState, 0, 0); updateHistoryButtons(); } }
@@ -438,9 +367,6 @@
         function applyTransform() { transformLayer.style.transform = `translate(${panX}px, ${panY}px) scale(${currentScale})`; }
         function zoomToPoint(scaleMultiplier, viewportX, viewportY) { let newScale = currentScale * scaleMultiplier; newScale = Math.max(0.3, Math.min(newScale, 10.0)); const actualMultiplier = newScale / currentScale; panX = viewportX - (viewportX - panX) * actualMultiplier; panY = viewportY - (viewportY - panY) * actualMultiplier; currentScale = newScale; applyTransform(); }
         
-        artboard.addEventListener('wheel', (e) => { e.preventDefault(); const rect = artboard.getBoundingClientRect(); const mouseX = e.clientX - rect.left; const mouseY = e.clientY - rect.top; if (e.ctrlKey) { const zoomFactor = Math.exp(-e.deltaY * 0.015); zoomToPoint(zoomFactor, mouseX, mouseY); } else { panX -= e.deltaX; panY -= e.deltaY; applyTransform(); } }, { passive: false });
-        document.getElementById('zoom-in').onclick = () => { const rect = artboard.getBoundingClientRect(); zoomToPoint(1.15, rect.width / 2, rect.height / 2); }; document.getElementById('zoom-out').onclick = () => { const rect = artboard.getBoundingClientRect(); zoomToPoint(1 / 1.15, rect.width / 2, rect.height / 2); };
-        
         document.getElementById('mode-draw').onclick = (e) => { currentMode = 'draw'; document.querySelectorAll('.tool-mode').forEach(b => b.classList.remove('active')); e.currentTarget.classList.add('active'); artboard.style.cursor = 'crosshair'; };
         document.getElementById('mode-fill').onclick = (e) => { currentMode = 'fill'; document.querySelectorAll('.tool-mode').forEach(b => b.classList.remove('active')); e.currentTarget.classList.add('active'); artboard.style.cursor = 'copy'; };
         document.getElementById('mode-pan').onclick = (e) => { currentMode = 'pan'; document.querySelectorAll('.tool-mode').forEach(b => b.classList.remove('active')); e.currentTarget.classList.add('active'); artboard.style.cursor = 'grab'; };
@@ -449,39 +375,34 @@
         document.getElementById('reset-btn').addEventListener('click', () => { saveState(); pCtx.fillStyle = '#ffffff'; pCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE); }); document.getElementById('back-btn').addEventListener('click', () => { gameScreen.classList.remove('active'); menuScreen.classList.add('active'); showInterstitialAd(); });
         function getCanvasPos(clientX, clientY) { const rect = paintCanvas.getBoundingClientRect(); const scaleX = paintCanvas.width / rect.width; const scaleY = paintCanvas.height / rect.height; return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY }; }
         
-        function fillArea(pos) {
-            let pathToFill = null;
-            for (let i = currentPaths2D.length - 1; i >= 0; i--) {
-                if (pCtx.isPointInPath(currentPaths2D[i], pos.x, pos.y)) {
-                    pathToFill = currentPaths2D[i];
-                    break;
-                }
-            }
-            if (pathToFill) {
-                saveState();
-                pCtx.fillStyle = isEraser ? '#ffffff' : currentColor;
-                pCtx.fill(pathToFill);
-            }
-        }
+        function fillArea(pos) { let pathToFill = null; for (let i = currentPaths2D.length - 1; i >= 0; i--) { if (pCtx.isPointInPath(currentPaths2D[i], pos.x, pos.y)) { pathToFill = currentPaths2D[i]; break; } } if (pathToFill) { saveState(); pCtx.fillStyle = isEraser ? '#ffffff' : currentColor; pCtx.fill(pathToFill); } }
         
         artboard.addEventListener('pointerdown', (e) => { 
             e.preventDefault(); 
             document.getElementById('color-wheel-container').classList.remove('visible');
             
             evCache.push(e); 
+
             if (evCache.length === 1) { 
                 if (currentMode === 'pan') { 
                     isGesturing = true; 
                     transformLayer.classList.add('panning'); 
                     artboard.style.cursor = 'grabbing'; 
-                } else if (currentMode === 'draw') {
-                    const pos = getCanvasPos(e.clientX, e.clientY); 
-                    startDrawing(pos); 
-                } else if (currentMode === 'fill') {
+                } else {
+                    // *** ИЗМЕНЕНИЕ 2: Откладываем действие рисования/заливки ***
                     const pos = getCanvasPos(e.clientX, e.clientY);
-                    fillArea(pos);
+                    singlePointerTimeout = setTimeout(() => {
+                        if (currentMode === 'draw') {
+                            startDrawing(pos);
+                        } else if (currentMode === 'fill') {
+                            fillArea(pos);
+                        }
+                    }, 50); // Небольшая задержка
                 }
-            } else if (evCache.length >= 2) { 
+            } else if (evCache.length >= 2) {
+                // *** ИЗМЕНЕНИЕ 3: Если появился второй палец, отменяем отложенное действие ***
+                clearTimeout(singlePointerTimeout);
+                
                 if (isDrawing) { undo(); redoStack = []; updateHistoryButtons(); } 
                 stopDrawing(); 
                 isGesturing = true; 
@@ -501,11 +422,26 @@
             }
         });
 
-        function handlePointerUp(e) { evCache = evCache.filter(ev => ev.pointerId !== e.pointerId); if (evCache.length < 2) { prevDiff = -1; prevCenter = null; } if (evCache.length === 0) { isGesturing = false; stopDrawing(); transformLayer.classList.remove('panning'); artboard.style.cursor = currentMode === 'pan' ? 'grab' : (currentMode === 'fill' ? 'copy' : 'crosshair'); } }
+        function handlePointerUp(e) { 
+            // *** ИЗМЕНЕНИЕ 4: Очищаем таймер при отпускании пальца ***
+            clearTimeout(singlePointerTimeout);
+            
+            evCache = evCache.filter(ev => ev.pointerId !== e.pointerId); 
+            if (evCache.length < 2) { 
+                prevDiff = -1; 
+                prevCenter = null; 
+            } 
+            if (evCache.length === 0) { 
+                isGesturing = false; 
+                stopDrawing(); 
+                transformLayer.classList.remove('panning'); 
+                artboard.style.cursor = currentMode === 'pan' ? 'grab' : (currentMode === 'fill' ? 'copy' : 'crosshair'); 
+            } 
+        }
         window.addEventListener('pointerup', handlePointerUp); window.addEventListener('pointercancel', handlePointerUp); artboard.addEventListener('pointerout', (e) => { if (evCache.length === 1 && !isGesturing && e.pointerType === 'mouse') { handlePointerUp(e); } });
         
         function startDrawing(pos) { 
-            if (currentMode !== 'draw') return;
+            if (currentMode !== 'draw' || isGesturing) return; // Дополнительная проверка на isGesturing
             activePath = null; 
             for (let i = currentPaths2D.length - 1; i >= 0; i--) { 
                 if (pCtx.isPointInPath(currentPaths2D[i], pos.x, pos.y)) { 
@@ -525,10 +461,9 @@
         function drawDot(x, y) { pCtx.save(); pCtx.clip(activePath); pCtx.fillStyle = isEraser ? '#ffffff' : currentColor; pCtx.beginPath(); let radius = (currentBrushSize * (CANVAS_SIZE / paintCanvas.clientWidth) / currentScale) / 2; pCtx.arc(x, y, radius, 0, Math.PI * 2); pCtx.fill(); pCtx.restore(); }
         function stopDrawing() { isDrawing = false; activePath = null; }
         
-        // Инициализируем всё в конце
         initPalette(); 
         initMenu();
-        initColorWheel(); // Инициализируем круг цветов
+        initColorWheel();
 
         let ys; YaGames.init().then(_ys => { ys = _ys; ys.features.appVisibility.ready(); console.log('Yandex SDK загружен'); }).catch(err => console.error('Ошибка Yandex SDK:', err));
         function showInterstitialAd() { if (ys && ys.adv) { ys.adv.showFullscreenAdv({ callbacks: { onClose: function () { console.log('Реклама закрыта'); }, onError: function (error) { console.log('Ошибка рекламы', error); } } }); } }
