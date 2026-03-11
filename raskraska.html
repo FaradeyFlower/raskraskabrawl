@@ -114,6 +114,7 @@
             gap: 10px;
             align-content: center;
         }
+
         .level-card {
             background: linear-gradient(180deg, #4dc9ff 0%, #1579ff 100%);
             border: 4px solid #000000;
@@ -127,30 +128,63 @@
             box-shadow: 4px 4px 0px #000000;
             transition: all 0.1s;
         }
-        .level-card:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0px #000000; }
+
+        .level-card:active {
+            transform: translate(3px, 3px);
+            box-shadow: 1px 1px 0px #000000;
+        }
+
         .level-card svg {
-            width: 100%; height: 12vh; min-height: 50px; max-height: 90px;
-            pointer-events: none; display: block; background: #ffffff;
-            border: 3px solid #000000; border-radius: 4px; box-sizing: border-box;
-            overflow: visible; margin-bottom: 5px;
+            width: 100%;
+            height: 12vh;
+            min-height: 50px;
+            max-height: 90px;
+            pointer-events: none;
+            display: block;
+            background: #ffffff;
+            border: 3px solid #000000;
+            border-radius: 4px;
+            box-sizing: border-box;
+            overflow: visible;
+            margin-bottom: 5px;
         }
+
         .level-title {
-            color: #ffffff; font-size: clamp(12px, 3vw, 16px); text-transform: uppercase;
-            -webkit-text-stroke: 0.5px #000000; text-shadow: 2px 2px 0px #000000;
-            text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;
+            color: #ffffff;
+            font-size: clamp(12px, 3vw, 16px);
+            text-transform: uppercase;
+            -webkit-text-stroke: 0.5px #000000;
+            text-shadow: 2px 2px 0px #000000;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
         }
+
         .pagination {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-top: 15px; background: rgba(0, 0, 0, 0.3); padding: 8px;
-            border-radius: 8px; border: 3px solid #000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px;
+            border-radius: 8px;
+            border: 3px solid #000;
         }
-        #page-info { font-size: 20px; color: #fff; -webkit-text-stroke: 1px #000; }
-        
+
+        #page-info {
+            font-size: 20px;
+            color: #fff;
+            -webkit-text-stroke: 1px #000;
+        }
+
         /* ================= ЭКРАН ИГРЫ ================= */
-        
+
         .canvas-viewport {
             position: absolute;
-            top: 0; left: 0;
+            top: 0;
+            left: 0;
             width: 100vw;
             height: 100vh;
             display: flex;
@@ -158,7 +192,7 @@
             align-items: center;
             z-index: 1;
         }
-        
+
         #artboard {
             width: 100vmin;
             height: 100vmin;
@@ -180,49 +214,126 @@
             transform-origin: 0 0;
             transition: transform 0.05s linear;
         }
-        #canvas-transform-layer.panning { transition: none; }
-        canvas, #svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        #svg-overlay { pointer-events: none; mix-blend-mode: multiply; }
-        #svg-overlay svg { width: 100%; height: 100%; display: block; }
-        
+
+        #canvas-transform-layer.panning {
+            transition: none;
+        }
+
+        canvas,
+        #svg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #svg-overlay {
+            pointer-events: none;
+            mix-blend-mode: multiply;
+        }
+
+        #svg-overlay svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
         .header-game {
-            position: absolute; top: 15px; left: 15px; z-index: 10;
-            display: flex; align-items: center; gap: 15px;
-            background: rgba(0, 0, 0, 0.6); padding: 8px 15px;
-            border-radius: 10px; border: 3px solid #000; backdrop-filter: blur(4px);
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 15px;
+            border-radius: 10px;
+            border: 3px solid #000;
+            backdrop-filter: blur(4px);
         }
-        #game-title { font-size: clamp(18px, 4vw, 24px); margin: 0; }
+
+        #game-title {
+            font-size: clamp(18px, 4vw, 24px);
+            margin: 0;
+        }
+
         .canvas-toolbar {
-            position: absolute; top: 15px; right: 15px; z-index: 10;
-            display: flex; gap: 8px; background: rgba(0, 0, 0, 0.6);
-            padding: 8px; border-radius: 10px; border: 3px solid #000; backdrop-filter: blur(4px);
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 10;
+            display: flex;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px;
+            border-radius: 10px;
+            border: 3px solid #000;
+            backdrop-filter: blur(4px);
         }
+
         .tools-sidebar {
-            position: absolute; right: 15px; top: 50%;
-            transform: translateY(-50%); z-index: 10; display: flex;
-            flex-direction: column; gap: 10px; width: 250px;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 250px;
         }
+
         .tools-panel {
-            background: rgba(43, 119, 255, 0.9); padding: 15px;
-            border-radius: 10px; border: 4px solid #000000; box-shadow: 4px 4px 0px #000000;
-            display: flex; flex-direction: column; gap: 10px; backdrop-filter: blur(4px);
+            background: rgba(43, 119, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            border: 4px solid #000000;
+            box-shadow: 4px 4px 0px #000000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            backdrop-filter: blur(4px);
         }
-        .action-buttons-row { display: flex; gap: 10px; justify-content: space-between; }
-        .action-buttons-row button { flex-grow: 1; padding: 8px; }
+
+        .action-buttons-row {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .action-buttons-row button {
+            flex-grow: 1;
+            padding: 8px;
+        }
+
         #palette {
-            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); z-index: 10;
-            display: flex; justify-content: center; gap: 8px;
-            flex-wrap: wrap; width: 90vw; max-width: 600px;
-            background: rgba(0, 0, 0, 0.6); padding: 10px;
-            border-radius: 10px; border: 3px solid #000;
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            width: 90vw;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            border-radius: 10px;
+            border: 3px solid #000;
             backdrop-filter: blur(4px);
         }
 
         /* --- СТИЛИ ДЛЯ КРУГА ЦВЕТОВ --- */
         #color-wheel-container {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: none;
             justify-content: center;
             align-items: center;
@@ -230,7 +341,11 @@
             z-index: 100;
             backdrop-filter: blur(4px);
         }
-        #color-wheel-container.visible { display: flex; }
+
+        #color-wheel-container.visible {
+            display: flex;
+        }
+
         .color-wheel-modal {
             background: #2b77ff;
             padding: 20px;
@@ -241,18 +356,21 @@
             flex-direction: column;
             gap: 15px;
         }
+
         #color-preview {
             width: 100%;
             height: 40px;
             border: 3px solid #000;
             border-radius: 6px;
-            box-shadow: inset 2px 2px 0px rgba(0,0,0,0.2);
+            box-shadow: inset 2px 2px 0px rgba(0, 0, 0, 0.2);
         }
+
         .color-wheel-mount {
             width: 250px;
             margin: 0 auto;
             position: relative;
         }
+
         #confirm-color-btn {
             width: 100%;
             background: #21ff00;
@@ -260,64 +378,254 @@
         }
 
         button.ui-btn {
-            background: #ffcc00; border: 3px solid #000000; padding: 8px 12px;
-            border-radius: 6px; cursor: pointer; font-family: 'MyCustomFont', cursive;
-            font-size: 16px; color: #ffffff; -webkit-text-stroke: 0.5px #000000;
-            text-shadow: 2px 2px 0px #000000; box-shadow: 3px 3px 0px #000000;
-            transition: all 0.1s; text-transform: uppercase;
-            display: flex; align-items: center; justify-content: center; gap: 5px;
+            background: #ffcc00;
+            border: 3px solid #000000;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'MyCustomFont', cursive;
+            font-size: 16px;
+            color: #ffffff;
+            -webkit-text-stroke: 0.5px #000000;
+            text-shadow: 2px 2px 0px #000000;
+            box-shadow: 3px 3px 0px #000000;
+            transition: all 0.1s;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
         }
-        button.ui-btn:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 0px 0px 0px #000000; }
-        button.ui-btn:disabled { background: #757575; color: #cccccc; cursor: not-allowed; box-shadow: 3px 3px 0px #000000; }
-        .tool-mode { background: #1579ff; flex-grow: 1; }
-        .tool-mode.active { background: #21ff00; }
-        #eraser-btn { background: #ffcc00; width: 100%; }
-        #eraser-btn.active { background: #fff; border-color: #21ff00; }
-        input[type="range"] { flex-grow: 1; -webkit-appearance: none; width: 100%; background: transparent; }
-        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 14px; background: #000000; border-radius: 7px; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 30px; width: 30px; border-radius: 50%; background: #21ff00; border: 4px solid #000000; margin-top: -8px; cursor: pointer; }
+
+        button.ui-btn:active:not(:disabled) {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px #000000;
+        }
+
+        button.ui-btn:disabled {
+            background: #757575;
+            color: #cccccc;
+            cursor: not-allowed;
+            box-shadow: 3px 3px 0px #000000;
+        }
+
+        .tool-mode {
+            background: #1579ff;
+            flex-grow: 1;
+        }
+
+        .tool-mode.active {
+            background: #21ff00;
+        }
+
+        #eraser-btn {
+            background: #ffcc00;
+            width: 100%;
+        }
+
+        #eraser-btn.active {
+            background: #fff;
+            border-color: #21ff00;
+        }
+
+        input[type="range"] {
+            flex-grow: 1;
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 14px;
+            background: #000000;
+            border-radius: 7px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+            background: #21ff00;
+            border: 4px solid #000000;
+            margin-top: -8px;
+            cursor: pointer;
+        }
+
         .color-btn {
-            width: clamp(30px, 8vw, 42px); height: clamp(30px, 8vw, 42px);
-            border-radius: 8px; border: 3px solid #000000; cursor: pointer;
-            transition: all 0.1s; box-shadow: 3px 3px 0px #000000;
+            width: clamp(30px, 8vw, 42px);
+            height: clamp(30px, 8vw, 42px);
+            border-radius: 8px;
+            border: 3px solid #000000;
+            cursor: pointer;
+            transition: all 0.1s;
+            box-shadow: 3px 3px 0px #000000;
         }
-        .color-btn:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px #000000; }
-        .color-btn.active { transform: scale(1.1); border-color: #ffffff; box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.8); }
+
+        .color-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px #000000;
+        }
+
+        .color-btn.active {
+            transform: scale(1.1);
+            border-color: #ffffff;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.8);
+        }
+
         .more-colors-btn {
             background: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
-            display: flex; justify-content: center; align-items: center;
-            color: white; font-size: 24px; font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
             -webkit-text-stroke: 1px black;
         }
 
         button.action-btn {
-            padding: 12px; font-size: 18px; background: #ffcc00; color: #ffffff;
-            border: 4px solid #000000; border-radius: 8px; cursor: pointer;
-            font-family: 'MyCustomFont', cursive; -webkit-text-stroke: 1px #000000;
-            text-shadow: 2px 2px 0px #000000; box-shadow: 4px 4px 0px #000000;
-            transition: all 0.1s; width: 100%; text-transform: uppercase;
+            padding: 12px;
+            font-size: 18px;
+            background: #ffcc00;
+            color: #ffffff;
+            border: 4px solid #000000;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'MyCustomFont', cursive;
+            -webkit-text-stroke: 1px #000000;
+            text-shadow: 2px 2px 0px #000000;
+            box-shadow: 4px 4px 0px #000000;
+            transition: all 0.1s;
+            width: 100%;
+            text-transform: uppercase;
         }
-        button.action-btn:active { transform: translate(3px, 3px); box-shadow: 0px 0px 0px #000000; }
+
+        button.action-btn:active {
+            transform: translate(3px, 3px);
+            box-shadow: 0px 0px 0px #000000;
+        }
 
         @media (max-width: 800px) {
-            #game-screen { background-color: white; }
-            .hide-text { display: none; }
-            #artboard { border: none; box-shadow: none; border-radius: 0; }
-            .header-game { top: 5px; left: 5px; padding: 4px 6px; border-width: 2px; }
-            #game-title { display: none; }
-            button.ui-btn { padding: 4px 8px; font-size: 18px; border-width: 2px; }
-            .canvas-toolbar { top: 5px; right: 5px; padding: 4px; gap: 4px; border-width: 2px; }
-            .tools-sidebar { top: auto; bottom: 60px; right: 5px; left: 5px; transform: none; flex-direction: row; width: auto; align-items: stretch; justify-content: center; gap: 5px; }
-            .tools-panel { flex-grow: 1; padding: 5px 8px; flex-direction: row; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 8px; border-width: 2px; box-shadow: 2px 2px 0px #000000; }
-            .tools-panel > div:nth-child(2) { display: none; }
-            .action-buttons-row { gap: 5px; flex-grow: 0; width: auto; }
-            .action-buttons-row button { padding: 4px 10px; font-size: 18px; }
-            #eraser-btn { width: auto; margin-top: 0 !important; padding: 4px 8px; }
-            input[type="range"] { max-width: 120px; margin: 0; flex-grow: 1; }
-            button.action-btn { width: auto; padding: 5px 10px; font-size: 18px; margin-bottom: 0; border-width: 2px; box-shadow: 2px 2px 0px #000000; }
-            #palette { bottom: 5px; width: 95vw; padding: 5px; gap: 4px; border-width: 2px; }
-            .color-btn { width: 26px; height: 26px; border-width: 2px; box-shadow: 2px 2px 0px #000000; }
-            .color-wheel-mount { width: 220px; }
+            #game-screen {
+                background-color: white;
+            }
+
+            .hide-text {
+                display: none;
+            }
+
+            #artboard {
+                border: none;
+                box-shadow: none;
+                border-radius: 0;
+            }
+
+            .header-game {
+                top: 5px;
+                left: 5px;
+                padding: 4px 6px;
+                border-width: 2px;
+            }
+
+            #game-title {
+                display: none;
+            }
+
+            button.ui-btn {
+                padding: 4px 8px;
+                font-size: 18px;
+                border-width: 2px;
+            }
+
+            .canvas-toolbar {
+                top: 5px;
+                right: 5px;
+                padding: 4px;
+                gap: 4px;
+                border-width: 2px;
+            }
+
+            .tools-sidebar {
+                top: auto;
+                bottom: 60px;
+                right: 5px;
+                left: 5px;
+                transform: none;
+                flex-direction: row;
+                width: auto;
+                align-items: stretch;
+                justify-content: center;
+                gap: 5px;
+            }
+
+            .tools-panel {
+                flex-grow: 1;
+                padding: 5px 8px;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+                border-width: 2px;
+                box-shadow: 2px 2px 0px #000000;
+            }
+
+            .tools-panel>div:nth-child(2) {
+                display: none;
+            }
+
+            .action-buttons-row {
+                gap: 5px;
+                flex-grow: 0;
+                width: auto;
+            }
+
+            .action-buttons-row button {
+                padding: 4px 10px;
+                font-size: 18px;
+            }
+
+            #eraser-btn {
+                width: auto;
+                margin-top: 0 !important;
+                padding: 4px 8px;
+            }
+
+            input[type="range"] {
+                max-width: 120px;
+                margin: 0;
+                flex-grow: 1;
+            }
+
+            button.action-btn {
+                width: auto;
+                padding: 5px 10px;
+                font-size: 18px;
+                margin-bottom: 0;
+                border-width: 2px;
+                box-shadow: 2px 2px 0px #000000;
+            }
+
+            #palette {
+                bottom: 5px;
+                width: 95vw;
+                padding: 5px;
+                gap: 4px;
+                border-width: 2px;
+            }
+
+            .color-btn {
+                width: 26px;
+                height: 26px;
+                border-width: 2px;
+                box-shadow: 2px 2px 0px #000000;
+            }
+
+            .color-wheel-mount {
+                width: 220px;
+            }
         }
 
         @media (min-width: 801px) {
@@ -329,8 +637,16 @@
 </head>
 
 <body>
-    <div id="menu-screen" class="screen active"><h1>ВЫБЕРИ РАСКРАСКУ</h1><div class="search-container"><input type="text" id="search-input" class="search-input" placeholder="🔍 Найти..." autocomplete="off"></div><div id="levels-grid"></div><div class="pagination" id="pagination-controls" style="display: none;"><button class="ui-btn" id="prev-page">⬅</button><span id="page-info">1 / 1</span><button class="ui-btn" id="next-page">➡</button></div></div>
-    
+    <div id="menu-screen" class="screen active">
+        <h1>ВЫБЕРИ РАСКРАСКУ</h1>
+        <div class="search-container"><input type="text" id="search-input" class="search-input"
+                placeholder="🔍 Найти..." autocomplete="off"></div>
+        <div id="levels-grid"></div>
+        <div class="pagination" id="pagination-controls" style="display: none;"><button class="ui-btn"
+                id="prev-page">⬅</button><span id="page-info">1 / 1</span><button class="ui-btn"
+                id="next-page">➡</button></div>
+    </div>
+
     <div id="game-screen" class="screen">
         <div class="canvas-viewport" id="viewport">
             <div id="artboard">
@@ -340,7 +656,9 @@
                 </div>
             </div>
         </div>
-        <div class="header-game"><button class="ui-btn" id="back-btn">⬅ <span class="hide-text">НАЗАД</span></button><h1 id="game-title">Рисунок</h1></div>
+        <div class="header-game"><button class="ui-btn" id="back-btn">⬅ <span class="hide-text">НАЗАД</span></button>
+            <h1 id="game-title">Рисунок</h1>
+        </div>
         <div class="canvas-toolbar">
             <button class="ui-btn tool-mode active" id="mode-draw">🖌 <span class="hide-text">Рисовать</span></button>
             <button class="ui-btn tool-mode" id="mode-fill">🎨 <span class="hide-text">Заливка</span></button>
@@ -350,8 +668,17 @@
             <button class="ui-btn" id="zoom-in">➕</button>
             <button class="ui-btn" id="zoom-out">➖</button>
         </div>
-        <div class="tools-sidebar"><div class="tools-panel"><div class="action-buttons-row"><button class="ui-btn" id="undo-btn" disabled>↩</button><button class="ui-btn" id="redo-btn" disabled>↪</button></div><div style="text-align: center; color: white; -webkit-text-stroke: 1px #000; text-shadow: 2px 2px 0 #000; font-size: 16px; margin-top: 2px;">ТОЛЩИНА КИСТИ</div><input type="range" id="brush-size" min="5" max="50" value="20"><button class="ui-btn" id="eraser-btn">🧼</button></div><button class="action-btn" id="reset-btn">🗑</button></div>
-        
+        <div class="tools-sidebar">
+            <div class="tools-panel">
+                <div class="action-buttons-row"><button class="ui-btn" id="undo-btn" disabled>↩</button><button
+                        class="ui-btn" id="redo-btn" disabled>↪</button></div>
+                <div
+                    style="text-align: center; color: white; -webkit-text-stroke: 1px #000; text-shadow: 2px 2px 0 #000; font-size: 16px; margin-top: 2px;">
+                    ТОЛЩИНА КИСТИ</div><input type="range" id="brush-size" min="5" max="50" value="20"><button
+                    class="ui-btn" id="eraser-btn">🧼</button>
+            </div><button class="action-btn" id="reset-btn">🗑</button>
+        </div>
+
         <div id="palette"></div>
 
         <div id="color-wheel-container">
@@ -367,25 +694,28 @@
         const mainColors = ['#ff4757', '#ffa502', '#eccc68', '#7bed9f', '#2ed573', '#70a1ff', '#5352ed', '#2f3542'];
         let currentColor = mainColors[0];
         let colorPicker;
-        
-        let currentBrushSize = 20; let isEraser = false; const menuScreen = document.getElementById('menu-screen'); const gameScreen = document.getElementById('game-screen'); const levelsGrid = document.getElementById('levels-grid'); const paletteContainer = document.getElementById('palette'); const brushSizeInput = document.getElementById('brush-size'); const eraserBtn = document.getElementById('eraser-btn'); const searchInput = document.getElementById('search-input'); const undoBtn = document.getElementById('undo-btn'); const redoBtn = document.getElementById('redo-btn'); const paintCanvas = document.getElementById('paintCanvas'); const pCtx = paintCanvas.getContext('2d', { willReadFrequently: true }); const svgOverlay = document.getElementById('svg-overlay'); const CANVAS_SIZE = 1600; paintCanvas.width = CANVAS_SIZE; paintCanvas.height = CANVAS_SIZE; const viewport = document.getElementById('viewport'); const artboard = document.getElementById('artboard'); const transformLayer = document.getElementById('canvas-transform-layer'); let currentScale = 1; let panX = 0, panY = 0; 
-        
-        let currentMode = 'draw'; 
-        let previousMode = 'draw'; // Запоминаем предыдущий режим для умного возврата пипетки
-        
+
+        let currentBrushSize = 20; let isEraser = false; const menuScreen = document.getElementById('menu-screen'); const gameScreen = document.getElementById('game-screen'); const levelsGrid = document.getElementById('levels-grid'); const paletteContainer = document.getElementById('palette'); const brushSizeInput = document.getElementById('brush-size'); const eraserBtn = document.getElementById('eraser-btn'); const searchInput = document.getElementById('search-input'); const undoBtn = document.getElementById('undo-btn'); const redoBtn = document.getElementById('redo-btn'); const paintCanvas = document.getElementById('paintCanvas'); const pCtx = paintCanvas.getContext('2d', { willReadFrequently: true }); const svgOverlay = document.getElementById('svg-overlay'); const CANVAS_SIZE = 1600; paintCanvas.width = CANVAS_SIZE; paintCanvas.height = CANVAS_SIZE; const viewport = document.getElementById('viewport'); const artboard = document.getElementById('artboard'); const transformLayer = document.getElementById('canvas-transform-layer'); let currentScale = 1; let panX = 0, panY = 0;
+
+        let currentMode = 'draw';
+        let previousMode = 'draw';
+
         let evCache = []; let prevDiff = -1; let prevCenter = null; let isGesturing = false; let currentPaths2D = []; let activePath = null; let isDrawing = false; let lastX = 0, lastY = 0; let undoStack = []; let redoStack = []; const MAX_HISTORY = 15; const ITEMS_PER_PAGE = 9; let currentPage = 0; let searchQuery = "";
-        
+
         let lastConfirmedColor = mainColors[0];
-        let actionOnFirstTouch = false;
+        
+        // НОВЫЕ ПЕРЕМЕННЫЕ ДЛЯ УМНОГО ОТКАТА (SNAPSHOT ROLLBACK)
+        let strokeSnapshot = null;
+        let isStrokeActive = false;
 
         searchInput.addEventListener('input', (e) => { searchQuery = e.target.value.toLowerCase().trim(); currentPage = 0; initMenu(); });
-        
+
         function initMenu() { /* ... код без изменений ... */ levelsGrid.innerHTML = ''; if (typeof pictures === 'undefined' || pictures.length === 0) { levelsGrid.innerHTML = "<div class='empty-search'>Нет уровней. Добавьте их через генератор!</div>"; document.getElementById('pagination-controls').style.display = 'none'; return; } const filteredPics = pictures.map((pic, index) => ({ pic, originalIndex: index })).filter(item => item.pic.title.toLowerCase().includes(searchQuery)); if (filteredPics.length === 0) { levelsGrid.innerHTML = "<div class='empty-search'>Ничего не найдено 😔</div>"; document.getElementById('pagination-controls').style.display = 'none'; return; } const totalPages = Math.ceil(filteredPics.length / ITEMS_PER_PAGE); if (totalPages > 1) { document.getElementById('pagination-controls').style.display = 'flex'; document.getElementById('page-info').innerText = `${currentPage + 1} / ${totalPages}`; document.getElementById('prev-page').disabled = currentPage === 0; document.getElementById('next-page').disabled = currentPage >= totalPages - 1; } else { document.getElementById('pagination-controls').style.display = 'none'; } const startIdx = currentPage * ITEMS_PER_PAGE; const endIdx = startIdx + ITEMS_PER_PAGE; const currentPics = filteredPics.slice(startIdx, endIdx); currentPics.forEach((item) => { const pic = item.pic; const globalIndex = item.originalIndex; let safeSvgStr = pic.svg; if (!safeSvgStr.includes('fill')) { safeSvgStr = safeSvgStr.replace('<path ', '<path fill="#ffffff" stroke="#000000" stroke-width="3" '); safeSvgStr = safeSvgStr.replace(/<path /g, '<path fill="#ffffff" stroke="#000000" stroke-width="3" '); } const wrapper = document.createElement('div'); wrapper.innerHTML = safeSvgStr; const svgEl = wrapper.querySelector('svg'); if (svgEl) { let vbX = 0, vbY = 0, vbW = 200, vbH = 200; if (svgEl.getAttribute('viewBox')) { const parts = svgEl.getAttribute('viewBox').trim().split(/[\s,]+/); vbX = parseFloat(parts[0]) || 0; vbY = parseFloat(parts[1]) || 0; vbW = parseFloat(parts[2]) || 200; vbH = parseFloat(parts[3]) || 200; } else { vbW = parseFloat(svgEl.getAttribute('width')) || 200; vbH = parseFloat(svgEl.getAttribute('height')) || 200; } const padX = vbW * 0.1; const padY = vbH * 0.1; svgEl.setAttribute('viewBox', `${vbX - padX} ${vbY - padY} ${vbW + padX * 2} ${vbH + padY * 2}`); svgEl.removeAttribute('width'); svgEl.removeAttribute('height'); svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet'); svgEl.style.overflow = 'visible'; const card = document.createElement('div'); card.className = 'level-card'; card.appendChild(svgEl); const titleEl = document.createElement('div'); titleEl.className = 'level-title'; titleEl.innerText = pic.title; card.appendChild(titleEl); card.onclick = () => openLevel(globalIndex); levelsGrid.appendChild(card); } }); }
         document.getElementById('prev-page').addEventListener('click', () => { if (currentPage > 0) { currentPage--; initMenu(); } }); document.getElementById('next-page').addEventListener('click', () => { const filteredCount = searchQuery ? pictures.filter(p => p.title.toLowerCase().includes(searchQuery)).length : pictures.length; const totalPages = Math.ceil(filteredCount / ITEMS_PER_PAGE); if (currentPage < totalPages - 1) { currentPage++; initMenu(); } });
-        
+
         function selectColor(color, btnEl) { isEraser = false; currentColor = color; eraserBtn.classList.remove('active'); document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active')); if (btnEl) btnEl.classList.add('active'); const moreBtn = document.querySelector('.more-colors-btn'); if (!mainColors.includes(color) && !isEraser) { moreBtn.classList.add('active'); moreBtn.style.background = color; } else { moreBtn.classList.remove('active'); moreBtn.style.background = 'linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet)'; } }
         function createColorButton(color) { const btn = document.createElement('div'); btn.className = 'color-btn'; btn.style.backgroundColor = color; btn.onclick = (e) => { e.stopPropagation(); selectColor(color, btn); if (colorPicker) colorPicker.color.hexString = color; }; return btn; }
-        
+
         function initPalette() {
             paletteContainer.innerHTML = '';
             mainColors.forEach(color => {
@@ -426,7 +756,7 @@
             colorPicker.on('color:change', function (color) {
                 document.getElementById('color-preview').style.backgroundColor = color.hexString;
             });
-            
+
             document.getElementById('confirm-color-btn').onclick = () => {
                 const newColor = colorPicker.color.hexString;
                 let matchBtn = null;
@@ -445,67 +775,118 @@
                 }
             });
         }
-        
-        // ФУНКЦИЯ КОНВЕРТАЦИИ RGB В HEX ДЛЯ ПИПЕТКИ
+
         function rgbToHex(r, g, b) {
             return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
         }
 
-        // ФУНКЦИЯ ПИПЕТКИ
         function pickColorFromCanvas(pos) {
             if (pos.x < 0 || pos.x >= CANVAS_SIZE || pos.y < 0 || pos.y >= CANVAS_SIZE) return;
             const pixel = pCtx.getImageData(pos.x, pos.y, 1, 1).data;
             let hex = '#ffffff';
-            if (pixel[3] > 0) { // Если пиксель не прозрачный
+            if (pixel[3] > 0) { 
                 hex = rgbToHex(pixel[0], pixel[1], pixel[2]);
             }
-            
+
             let matchBtn = null;
             if (mainColors.includes(hex)) {
                 matchBtn = document.querySelectorAll('#palette .color-btn')[mainColors.indexOf(hex)];
             }
-            
+
             selectColor(hex, matchBtn);
             lastConfirmedColor = hex;
             if (colorPicker) colorPicker.color.hexString = hex;
-            
-            // Автоматически возвращаемся к предыдущему инструменту
+
             document.getElementById('mode-' + previousMode).click();
         }
 
-        brushSizeInput.oninput = (e) => currentBrushSize = e.target.value; 
+        brushSizeInput.oninput = (e) => currentBrushSize = e.target.value;
         eraserBtn.onclick = () => { isEraser = true; document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active')); eraserBtn.classList.add('active'); };
 
-        function saveState() { undoStack.push(pCtx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE)); if (undoStack.length > MAX_HISTORY) undoStack.shift(); redoStack = []; updateHistoryButtons(); }
-        function undo() { if (undoStack.length > 0) { redoStack.push(pCtx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE)); const previousState = undoStack.pop(); pCtx.putImageData(previousState, 0, 0); updateHistoryButtons(); } }
-        function redo() { if (redoStack.length > 0) { undoStack.push(pCtx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE)); const nextState = redoStack.pop(); pCtx.putImageData(nextState, 0, 0); updateHistoryButtons(); } }
+        // saveState используется теперь только для reset-btn. 
+        // Нормальные действия теперь коммитятся через strokeSnapshot
+        function saveState() { 
+            undoStack.push(pCtx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE)); 
+            if (undoStack.length > MAX_HISTORY) undoStack.shift(); 
+            redoStack = []; 
+            updateHistoryButtons(); 
+        }
+        
+        function undo() { 
+            if (undoStack.length > 0) { 
+                redoStack.push(pCtx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE)); 
+                const previousState = undoStack.pop(); 
+                pCtx.putImageData(previousState, 0, 0); 
+                updateHistoryButtons(); 
+            } 
+        }
+        function redo() { 
+            if (redoStack.length > 0) { 
+                undoStack.push(pCtx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE)); 
+                const nextState = redoStack.pop(); 
+                pCtx.putImageData(nextState, 0, 0); 
+                updateHistoryButtons(); 
+            } 
+        }
         function updateHistoryButtons() { undoBtn.disabled = undoStack.length === 0; redoBtn.disabled = redoStack.length === 0; }
         undoBtn.addEventListener('click', undo); redoBtn.addEventListener('click', redo);
+        
         function applyTransform() { transformLayer.style.transform = `translate(${panX}px, ${panY}px) scale(${currentScale})`; }
         function zoomToPoint(scaleMultiplier, viewportX, viewportY) { let newScale = currentScale * scaleMultiplier; newScale = Math.max(0.3, Math.min(newScale, 10.0)); const actualMultiplier = newScale / currentScale; panX = viewportX - (viewportX - panX) * actualMultiplier; panY = viewportY - (viewportY - panY) * actualMultiplier; currentScale = newScale; applyTransform(); }
-        
+
         artboard.addEventListener('wheel', (e) => { e.preventDefault(); const rect = artboard.getBoundingClientRect(); const mouseX = e.clientX - rect.left; const mouseY = e.clientY - rect.top; if (e.ctrlKey) { const zoomFactor = Math.exp(-e.deltaY * 0.015); zoomToPoint(zoomFactor, mouseX, mouseY); } else { panX -= e.deltaX; panY -= e.deltaY; applyTransform(); } }, { passive: false });
 
         document.getElementById('zoom-in').onclick = () => { const rect = artboard.getBoundingClientRect(); zoomToPoint(1.15, rect.width / 2, rect.height / 2); }; document.getElementById('zoom-out').onclick = () => { const rect = artboard.getBoundingClientRect(); zoomToPoint(1 / 1.15, rect.width / 2, rect.height / 2); };
-        
-        // ОБНОВЛЕННАЯ ЛОГИКА КНОПОК РЕЖИМА
+
         document.getElementById('mode-draw').onclick = (e) => { previousMode = 'draw'; currentMode = 'draw'; document.querySelectorAll('.tool-mode').forEach(b => b.classList.remove('active')); e.currentTarget.classList.add('active'); artboard.style.cursor = 'crosshair'; };
         document.getElementById('mode-fill').onclick = (e) => { previousMode = 'fill'; currentMode = 'fill'; document.querySelectorAll('.tool-mode').forEach(b => b.classList.remove('active')); e.currentTarget.classList.add('active'); artboard.style.cursor = 'copy'; };
         document.getElementById('mode-picker').onclick = (e) => { currentMode = 'picker'; document.querySelectorAll('.tool-mode').forEach(b => b.classList.remove('active')); e.currentTarget.classList.add('active'); artboard.style.cursor = 'crosshair'; };
         document.getElementById('mode-pan').onclick = (e) => { currentMode = 'pan'; document.querySelectorAll('.tool-mode').forEach(b => b.classList.remove('active')); e.currentTarget.classList.add('active'); artboard.style.cursor = 'grab'; };
-        
+
         function openLevel(index) { /* ... код без изменений ... */ const pic = pictures[index]; document.getElementById('game-title').innerText = pic.title; currentScale = 1; panX = 0; panY = 0; applyTransform(); document.getElementById('mode-draw').click(); undoStack = []; redoStack = []; updateHistoryButtons(); pCtx.fillStyle = '#ffffff'; pCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE); svgOverlay.innerHTML = ''; currentPaths2D = []; const measurer = document.createElement('div'); measurer.style.cssText = 'position:absolute; top:0; left:0; opacity:0; pointer-events:none; width:800px; height:800px; overflow:hidden; z-index:-100;'; let safeSvgStr = pic.svg; if (!safeSvgStr.includes('fill')) { safeSvgStr = safeSvgStr.replace('<path ', '<path fill="#ffffff" stroke="#000000" stroke-width="3" '); safeSvgStr = safeSvgStr.replace(/<path /g, '<path fill="#ffffff" stroke="#000000" stroke-width="3" '); } measurer.innerHTML = safeSvgStr; document.body.appendChild(measurer); const svgEl = measurer.querySelector('svg'); let vbX = 0, vbY = 0, vbW = 200, vbH = 200; if (svgEl.getAttribute('viewBox')) { const parts = svgEl.getAttribute('viewBox').trim().split(/[\s,]+/); vbX = parseFloat(parts[0]) || 0; vbY = parseFloat(parts[1]) || 0; vbW = parseFloat(parts[2]) || 200; vbH = parseFloat(parts[3]) || 200; } else { try { const bbox = svgEl.getBBox(); if (bbox && bbox.width > 0) { vbX = bbox.x; vbY = bbox.y; vbW = bbox.width; vbH = bbox.height; } } catch (e) { } } svgEl.setAttribute('viewBox', `${vbX} ${vbY} ${vbW} ${vbH}`); svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet'); svgEl.style.width = '100%'; svgEl.style.height = '100%'; const scale = Math.min(CANVAS_SIZE / vbW, CANVAS_SIZE / vbH); const finalW = vbW * scale; const finalH = vbH * scale; const offsetX = (CANVAS_SIZE - finalW) / 2; const offsetY = (CANVAS_SIZE - finalH) / 2; const rootMatrix = svgEl.getScreenCTM(); const paths = svgEl.querySelectorAll('path'); paths.forEach(pathNode => { const d = pathNode.getAttribute('d'); if (!d) return; const pathMatrix = pathNode.getScreenCTM(); let relativeMatrix = new DOMMatrix(); if (rootMatrix && pathMatrix) { relativeMatrix = rootMatrix.inverse().multiply(pathMatrix); } let m = new DOMMatrix().translate(offsetX, offsetY).scale(scale, scale).translate(-vbX, -vbY).multiply(relativeMatrix); let p = new Path2D(d); let scaledPath = new Path2D(); scaledPath.addPath(p, m); currentPaths2D.push(scaledPath); }); svgOverlay.appendChild(svgEl); document.body.removeChild(measurer); menuScreen.classList.remove('active'); gameScreen.classList.add('active'); }
         document.getElementById('reset-btn').addEventListener('click', () => { saveState(); pCtx.fillStyle = '#ffffff'; pCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE); }); document.getElementById('back-btn').addEventListener('click', () => { gameScreen.classList.remove('active'); menuScreen.classList.add('active'); showInterstitialAd(); });
         function getCanvasPos(clientX, clientY) { const rect = paintCanvas.getBoundingClientRect(); const scaleX = paintCanvas.width / rect.width; const scaleY = paintCanvas.height / rect.height; return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY }; }
-        
-        function fillArea(pos) { let pathToFill = null; for (let i = currentPaths2D.length - 1; i >= 0; i--) { if (pCtx.isPointInPath(currentPaths2D[i], pos.x, pos.y)) { pathToFill = currentPaths2D[i]; break; } } if (pathToFill) { saveState(); pCtx.fillStyle = isEraser ? '#ffffff' : currentColor; pCtx.fill(pathToFill); actionOnFirstTouch = true; } }
-        
+
+        function startDrawing(pos) {
+            if (currentMode !== 'draw' || isGesturing) return false;
+            activePath = null;
+            for (let i = currentPaths2D.length - 1; i >= 0; i--) { 
+                if (pCtx.isPointInPath(currentPaths2D[i], pos.x, pos.y)) { 
+                    activePath = currentPaths2D[i]; 
+                    break; 
+                } 
+            }
+            if (activePath) {
+                isDrawing = true;
+                lastX = pos.x;
+                lastY = pos.y;
+                drawDot(pos.x, pos.y);
+                return true; // Возвращаем true, если действие началось
+            }
+            return false;
+        }
+
+        function fillArea(pos) { 
+            let pathToFill = null; 
+            for (let i = currentPaths2D.length - 1; i >= 0; i--) { 
+                if (pCtx.isPointInPath(currentPaths2D[i], pos.x, pos.y)) { 
+                    pathToFill = currentPaths2D[i]; 
+                    break; 
+                } 
+            } 
+            if (pathToFill) { 
+                pCtx.fillStyle = isEraser ? '#ffffff' : currentColor; 
+                pCtx.fill(pathToFill); 
+                return true; // Возвращаем true, если действие совершилось
+            } 
+            return false;
+        }
+
+        // ОСНОВНАЯ ЛОГИКА ТАЧА И ОТМЕНЫ
         artboard.addEventListener('pointerdown', (e) => {
             e.preventDefault();
             document.getElementById('color-wheel-container').classList.remove('visible');
             evCache.push(e);
-            
-            actionOnFirstTouch = false;
 
             if (evCache.length === 1) {
                 if (currentMode === 'pan') {
@@ -513,18 +894,33 @@
                     transformLayer.classList.add('panning');
                     artboard.style.cursor = 'grabbing';
                 } else if (currentMode === 'picker') {
-                    // ИСПОЛЬЗУЕМ ПИПЕТКУ
                     pickColorFromCanvas(getCanvasPos(e.clientX, e.clientY));
-                } else if (currentMode === 'draw') {
-                    startDrawing(getCanvasPos(e.clientX, e.clientY));
-                } else if (currentMode === 'fill') {
-                    fillArea(getCanvasPos(e.clientX, e.clientY));
+                } else if (currentMode === 'draw' || currentMode === 'fill') {
+                    // 1. ДЕЛАЕМ СНИМОК ХОЛСТА ДО НАЧАЛА ДЕЙСТВИЯ
+                    strokeSnapshot = pCtx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+                    let actionStarted = false;
+
+                    if (currentMode === 'draw') {
+                        actionStarted = startDrawing(getCanvasPos(e.clientX, e.clientY));
+                    } else if (currentMode === 'fill') {
+                        actionStarted = fillArea(getCanvasPos(e.clientX, e.clientY));
+                    }
+
+                    // 2. Если мы реально начали рисовать/заливать, активируем флаг
+                    if (actionStarted) {
+                        isStrokeActive = true;
+                    } else {
+                        strokeSnapshot = null;
+                    }
                 }
             } else if (evCache.length >= 2) {
-                if (actionOnFirstTouch) { 
-                    undo(); 
-                    actionOnFirstTouch = false;
+                // 3. ЕСЛИ КОСНУЛСЯ ВТОРОЙ ПАЛЕЦ - ОТКАТЫВАЕМ К СНИМКУ (СТИРАЕМ СЛЕД ОТ 1 ПАЛЬЦА)
+                if (isStrokeActive && strokeSnapshot) {
+                    pCtx.putImageData(strokeSnapshot, 0, 0); // Мгновенный откат без затрагивания UndoStack
+                    isStrokeActive = false;
+                    strokeSnapshot = null;
                 }
+                
                 stopDrawing();
                 isGesturing = true;
                 transformLayer.classList.add('panning');
@@ -535,17 +931,15 @@
 
         window.addEventListener('pointermove', (e) => {
             const index = evCache.findIndex(ev => ev.pointerId === e.pointerId); if (index === -1) return;
-            const dx = e.clientX - evCache[index].clientX; const dy = e.clientY - evCache[index].clientY; evCache[index] = e; 
-            
-            actionOnFirstTouch = false;
+            const dx = e.clientX - evCache[index].clientX; const dy = e.clientY - evCache[index].clientY; evCache[index] = e;
 
-            if (evCache.length === 1) { 
-                if (isGesturing && currentMode === 'pan') { 
-                    panX += dx; panY += dy; 
-                    applyTransform(); 
-                } else if (isDrawing && currentMode === 'draw') { 
-                    draw(getCanvasPos(e.clientX, e.clientY)); 
-                } 
+            if (evCache.length === 1) {
+                if (isGesturing && currentMode === 'pan') {
+                    panX += dx; panY += dy;
+                    applyTransform();
+                } else if (isDrawing && currentMode === 'draw') {
+                    draw(getCanvasPos(e.clientX, e.clientY));
+                }
             } else if (evCache.length >= 2 && isGesturing) {
                 const curDiff = Math.hypot(evCache[0].clientX - evCache[1].clientX, evCache[0].clientY - evCache[1].clientY); const curCenter = { x: (evCache[0].clientX + evCache[1].clientX) / 2, y: (evCache[0].clientY + evCache[1].clientY) / 2 }; if (prevCenter && prevDiff > 0) {
                     panX += (curCenter.x - prevCenter.x); panY += (curCenter.y - prevCenter.y); const zoomFactor = curDiff / prevDiff;
@@ -557,38 +951,35 @@
 
         function handlePointerUp(e) {
             evCache = evCache.filter(ev => ev.pointerId !== e.pointerId);
-            if (evCache.length < 2) { 
+            if (evCache.length < 2) {
                 isGesturing = false;
                 transformLayer.classList.remove('panning');
-                prevDiff = -1; 
-                prevCenter = null; 
+                prevDiff = -1;
+                prevCenter = null;
             }
             if (evCache.length === 0) {
+                // 4. ЕСЛИ ЭТО БЫЛО РЕАЛЬНОЕ ДЕЙСТВИЕ (БЕЗ ЗУМА), СОХРАНЯЕМ В ИСТОРИЮ
+                if (isStrokeActive && strokeSnapshot) {
+                    undoStack.push(strokeSnapshot);
+                    if (undoStack.length > MAX_HISTORY) undoStack.shift();
+                    redoStack = [];
+                    updateHistoryButtons();
+                }
+                
+                isStrokeActive = false;
+                strokeSnapshot = null;
+
                 stopDrawing();
                 artboard.style.cursor = currentMode === 'pan' ? 'grab' : (currentMode === 'fill' ? 'copy' : 'crosshair');
             }
-            actionOnFirstTouch = false;
         }
         window.addEventListener('pointerup', handlePointerUp); window.addEventListener('pointercancel', handlePointerUp); artboard.addEventListener('pointerout', (e) => { if (evCache.length === 1 && !isGesturing && e.pointerType === 'mouse') { handlePointerUp(e); } });
-        
-        function startDrawing(pos) { 
-            if (currentMode !== 'draw' || isGesturing) return;
-            activePath = null;
-            for (let i = currentPaths2D.length - 1; i >= 0; i--) { if (pCtx.isPointInPath(currentPaths2D[i], pos.x, pos.y)) { activePath = currentPaths2D[i]; break; } } 
-            if (activePath) { 
-                saveState(); 
-                isDrawing = true; 
-                lastX = pos.x; 
-                lastY = pos.y; 
-                drawDot(pos.x, pos.y);
-                actionOnFirstTouch = true;
-            } 
-        }
+
         function draw(pos) { if (!isDrawing || !activePath) return; pCtx.save(); pCtx.clip(activePath); pCtx.lineCap = 'round'; pCtx.lineJoin = 'round'; pCtx.lineWidth = currentBrushSize * (CANVAS_SIZE / paintCanvas.clientWidth) / currentScale; pCtx.strokeStyle = isEraser ? '#ffffff' : currentColor; pCtx.beginPath(); pCtx.moveTo(lastX, lastY); pCtx.lineTo(pos.x, pos.y); pCtx.stroke(); pCtx.restore(); lastX = pos.x; lastY = pos.y; }
         function drawDot(x, y) { pCtx.save(); pCtx.clip(activePath); pCtx.fillStyle = isEraser ? '#ffffff' : currentColor; pCtx.beginPath(); let radius = (currentBrushSize * (CANVAS_SIZE / paintCanvas.clientWidth) / currentScale) / 2; pCtx.arc(x, y, radius, 0, Math.PI * 2); pCtx.fill(); pCtx.restore(); }
         function stopDrawing() { isDrawing = false; activePath = null; }
-        
-        initPalette(); 
+
+        initPalette();
         initMenu();
         initColorWheel();
 
