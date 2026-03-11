@@ -369,8 +369,8 @@
         let currentBrushSize = 20; let isEraser = false; const menuScreen = document.getElementById('menu-screen'); const gameScreen = document.getElementById('game-screen'); const levelsGrid = document.getElementById('levels-grid'); const paletteContainer = document.getElementById('palette'); const brushSizeInput = document.getElementById('brush-size'); const eraserBtn = document.getElementById('eraser-btn'); const searchInput = document.getElementById('search-input'); const undoBtn = document.getElementById('undo-btn'); const redoBtn = document.getElementById('redo-btn'); const paintCanvas = document.getElementById('paintCanvas'); const pCtx = paintCanvas.getContext('2d', { willReadFrequently: true }); const svgOverlay = document.getElementById('svg-overlay'); const CANVAS_SIZE = 1600; paintCanvas.width = CANVAS_SIZE; paintCanvas.height = CANVAS_SIZE; const viewport = document.getElementById('viewport'); const artboard = document.getElementById('artboard'); const transformLayer = document.getElementById('canvas-transform-layer'); let currentScale = 1; let panX = 0, panY = 0; let currentMode = 'draw'; let evCache = []; let prevDiff = -1; let prevCenter = null; let isGesturing = false; let currentPaths2D = []; let activePath = null; let isDrawing = false; let lastX = 0, lastY = 0; let undoStack = []; let redoStack = []; const MAX_HISTORY = 15; const ITEMS_PER_PAGE = 9; let currentPage = 0; let searchQuery = "";
         
         let lastConfirmedColor = mainColors[0];
-        // *** ИЗМЕНЕНИЕ 1: Флаг для отслеживания действия, совершенного первым пальцем ***
-        let actionOnFirstTouch = false;
+        // НОВАЯ ПЕРЕМЕННАЯ: Запоминаем время последней заливки
+        let lastFillTime = 0;
 
         searchInput.addEventListener('input', (e) => { searchQuery = e.target.value.toLowerCase().trim(); currentPage = 0; initMenu(); });
         
@@ -459,14 +459,26 @@
         document.getElementById('reset-btn').addEventListener('click', () => { saveState(); pCtx.fillStyle = '#ffffff'; pCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE); }); document.getElementById('back-btn').addEventListener('click', () => { gameScreen.classList.remove('active'); menuScreen.classList.add('active'); showInterstitialAd(); });
         function getCanvasPos(clientX, clientY) { const rect = paintCanvas.getBoundingClientRect(); const scaleX = paintCanvas.width / rect.width; const scaleY = paintCanvas.height / rect.height; return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY }; }
         
-        function fillArea(pos) { let pathToFill = null; for (let i = currentPaths2D.length - 1; i >= 0; i--) { if (pCtx.isPointInPath(currentPaths2D[i], pos.x, pos.y)) { pathToFill = currentPaths2D[i]; break; } } if (pathToFill) { saveState(); pCtx.fillStyle = isEraser ? '#ffffff' : currentColor; pCtx.fill(pathToFill); actionOnFirstTouch = true; } }
+        function fillArea(pos) { 
+            let pathToFill = null; 
+            for (let i = currentPaths2D.length - 1; i >= 0; i--) { 
+                if (pCtx.isPointInPath(currentPaths2D[i], pos.x, pos.y)) { 
+                    pathToFill = currentPaths2D[i]; 
+                    break; 
+                } 
+            } 
+            if (pathToFill) { 
+                saveState(); 
+                pCtx.fillStyle = isEraser ? '#ffffff' : currentColor; 
+                pCtx.fill(pathToFill); 
+                lastFillTime = Date.now(); // Запоминаем время заливки
+            } 
+        }
         
         artboard.addEventListener('pointerdown', (e) => {
             e.preventDefault();
             document.getElementById('color-wheel-container').classList.remove('visible');
             evCache.push(e);
-            
-            actionOnFirstTouch = false; // Сбрасываем флаг при новом касании
 
             if (evCache.length === 1) {
                 if (currentMode === 'pan') {
@@ -479,12 +491,14 @@
                     fillArea(getCanvasPos(e.clientX, e.clientY));
                 }
             } else if (evCache.length >= 2) {
-                // *** ИЗМЕНЕНИЕ 2: Отменяем действие, только если оно было совершено ПЕРВЫМ пальцем ***
-                if (actionOnFirstTouch) { 
+                // ИДЕАЛЬНАЯ ЛОГИКА ОТМЕНЫ:
+                // Отменяем только если мы прямо сейчас рисуем (палец еще не отпущен)
+                // ИЛИ если мы сделали заливку МЕНЕЕ 200мс назад (быстрое второе касание)
+                if (isDrawing || (currentMode === 'fill' && (Date.now() - lastFillTime < 200))) { 
                     undo(); 
-                    actionOnFirstTouch = false; // Отменили, сбросили флаг
                 }
-                stopDrawing(); // Останавливаем рисование в любом случае
+                
+                stopDrawing();
                 isGesturing = true;
                 transformLayer.classList.add('panning');
                 prevDiff = Math.hypot(evCache[0].clientX - evCache[1].clientX, evCache[0].clientY - evCache[1].clientY);
@@ -495,9 +509,6 @@
         window.addEventListener('pointermove', (e) => {
             const index = evCache.findIndex(ev => ev.pointerId === e.pointerId); if (index === -1) return;
             const dx = e.clientX - evCache[index].clientX; const dy = e.clientY - evCache[index].clientY; evCache[index] = e; 
-            
-            // *** ИЗМЕНЕНИЕ 3: Если началось движение, действие считается намеренным и не будет отменено ***
-            actionOnFirstTouch = false;
 
             if (evCache.length === 1) { 
                 if (isGesturing && currentMode === 'pan') { 
@@ -527,7 +538,6 @@
                 stopDrawing();
                 artboard.style.cursor = currentMode === 'pan' ? 'grab' : (currentMode === 'fill' ? 'copy' : 'crosshair');
             }
-            actionOnFirstTouch = false; // Сбрасываем флаг при отпускании пальца
         }
         window.addEventListener('pointerup', handlePointerUp); window.addEventListener('pointercancel', handlePointerUp); artboard.addEventListener('pointerout', (e) => { if (evCache.length === 1 && !isGesturing && e.pointerType === 'mouse') { handlePointerUp(e); } });
         
@@ -541,7 +551,6 @@
                 lastX = pos.x; 
                 lastY = pos.y; 
                 drawDot(pos.x, pos.y);
-                actionOnFirstTouch = true;
             } 
         }
         function draw(pos) { if (!isDrawing || !activePath) return; pCtx.save(); pCtx.clip(activePath); pCtx.lineCap = 'round'; pCtx.lineJoin = 'round'; pCtx.lineWidth = currentBrushSize * (CANVAS_SIZE / paintCanvas.clientWidth) / currentScale; pCtx.strokeStyle = isEraser ? '#ffffff' : currentColor; pCtx.beginPath(); pCtx.moveTo(lastX, lastY); pCtx.lineTo(pos.x, pos.y); pCtx.stroke(); pCtx.restore(); lastX = pos.x; lastY = pos.y; }
