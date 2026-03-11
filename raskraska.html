@@ -33,8 +33,13 @@
         }
 
         @keyframes scrollBg {
-            0% { background-position: 0 0; }
-            100% { background-position: 150px 150px; }
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 150px 150px;
+            }
         }
 
         /* Общие стили экранов */
@@ -54,8 +59,15 @@
         }
 
         @keyframes bounceIn {
-            0% { opacity: 0; transform: scale(0.9); }
-            100% { opacity: 1; transform: scale(1); }
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         /* ================= ЭКРАН МЕНЮ ================= */
@@ -71,8 +83,13 @@
             flex-direction: column;
         }
 
-        #menu-screen.active { display: flex; }
-        #menu-screen::-webkit-scrollbar { display: none; }
+        #menu-screen.active {
+            display: flex;
+        }
+
+        #menu-screen::-webkit-scrollbar {
+            display: none;
+        }
 
         h1 {
             color: #ffffff;
@@ -86,7 +103,11 @@
             text-align: center;
         }
 
-        .search-container { margin: 0 0 10px 0; width: 100%; }
+        .search-container {
+            margin: 0 0 10px 0;
+            width: 100%;
+        }
+
         .search-input {
             width: 100%;
             padding: 10px 15px;
@@ -101,6 +122,7 @@
             outline: none;
             transition: 0.1s;
         }
+
         .search-input:focus {
             transform: translate(2px, 2px);
             box-shadow: 2px 2px 0px #000000;
@@ -113,6 +135,7 @@
             gap: 10px;
             align-content: center;
         }
+
         .level-card {
             background: linear-gradient(180deg, #4dc9ff 0%, #1579ff 100%);
             border: 4px solid #000000;
@@ -126,30 +149,63 @@
             box-shadow: 4px 4px 0px #000000;
             transition: all 0.1s;
         }
-        .level-card:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0px #000000; }
+
+        .level-card:active {
+            transform: translate(3px, 3px);
+            box-shadow: 1px 1px 0px #000000;
+        }
+
         .level-card svg {
-            width: 100%; height: 12vh; min-height: 50px; max-height: 90px;
-            pointer-events: none; display: block; background: #ffffff;
-            border: 3px solid #000000; border-radius: 4px; box-sizing: border-box;
-            overflow: visible; margin-bottom: 5px;
+            width: 100%;
+            height: 12vh;
+            min-height: 50px;
+            max-height: 90px;
+            pointer-events: none;
+            display: block;
+            background: #ffffff;
+            border: 3px solid #000000;
+            border-radius: 4px;
+            box-sizing: border-box;
+            overflow: visible;
+            margin-bottom: 5px;
         }
+
         .level-title {
-            color: #ffffff; font-size: clamp(12px, 3vw, 16px); text-transform: uppercase;
-            -webkit-text-stroke: 0.5px #000000; text-shadow: 2px 2px 0px #000000;
-            text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;
+            color: #ffffff;
+            font-size: clamp(12px, 3vw, 16px);
+            text-transform: uppercase;
+            -webkit-text-stroke: 0.5px #000000;
+            text-shadow: 2px 2px 0px #000000;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
         }
+
         .pagination {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-top: 15px; background: rgba(0, 0, 0, 0.3); padding: 8px;
-            border-radius: 8px; border: 3px solid #000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px;
+            border-radius: 8px;
+            border: 3px solid #000;
         }
-        #page-info { font-size: 20px; color: #fff; -webkit-text-stroke: 1px #000; }
-        
+
+        #page-info {
+            font-size: 20px;
+            color: #fff;
+            -webkit-text-stroke: 1px #000;
+        }
+
         /* ================= ЭКРАН ИГРЫ: ФИНАЛЬНАЯ СТРУКТУРА ================= */
-        
+
         .canvas-viewport {
             position: absolute;
-            top: 0; left: 0;
+            top: 0;
+            left: 0;
             width: 100vw;
             height: 100vh;
             display: flex;
@@ -159,18 +215,24 @@
             touch-action: none;
             z-index: 1;
         }
-        
+
         #artboard {
             width: 100vmin;
             height: 100vmin;
             position: relative;
             cursor: crosshair;
-            background: white; /* Фон для области рисования */
+            background: white;
+            /* Фон для области рисования */
+            box-sizing: border-box;
+
+            /* *** ФИНАЛЬНОЕ ИСПРАВЛЕНИЕ *** */
+            overflow: hidden;
+            /* Обрезаем всё, что выходит за рамки */
+
             /* Стили для ПК */
             border: 5px solid #000000;
             border-radius: 8px;
             box-shadow: 4px 4px 0px #000000;
-            box-sizing: border-box;
         }
 
         #canvas-transform-layer {
@@ -182,104 +244,370 @@
             transform-origin: 0 0;
             transition: transform 0.05s linear;
         }
-        #canvas-transform-layer.panning { transition: none; }
-        canvas, #svg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        #svg-overlay { pointer-events: none; mix-blend-mode: multiply; }
-        #svg-overlay svg { width: 100%; height: 100%; display: block; }
-        
+
+        #canvas-transform-layer.panning {
+            transition: none;
+        }
+
+        canvas,
+        #svg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #svg-overlay {
+            pointer-events: none;
+            mix-blend-mode: multiply;
+        }
+
+        #svg-overlay svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
         .header-game {
-            position: absolute; top: 15px; left: 15px; z-index: 10;
-            display: flex; align-items: center; gap: 15px;
-            background: rgba(0, 0, 0, 0.6); padding: 8px 15px;
-            border-radius: 10px; border: 3px solid #000; backdrop-filter: blur(4px);
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 15px;
+            border-radius: 10px;
+            border: 3px solid #000;
+            backdrop-filter: blur(4px);
         }
-        #game-title { font-size: clamp(18px, 4vw, 24px); margin: 0; }
+
+        #game-title {
+            font-size: clamp(18px, 4vw, 24px);
+            margin: 0;
+        }
+
         .canvas-toolbar {
-            position: absolute; top: 15px; right: 15px; z-index: 10;
-            display: flex; gap: 8px; background: rgba(0, 0, 0, 0.6);
-            padding: 8px; border-radius: 10px; border: 3px solid #000; backdrop-filter: blur(4px);
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 10;
+            display: flex;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px;
+            border-radius: 10px;
+            border: 3px solid #000;
+            backdrop-filter: blur(4px);
         }
+
         .tools-sidebar {
-            position: absolute; right: 15px; top: 50%;
-            transform: translateY(-50%); z-index: 10; display: flex;
-            flex-direction: column; gap: 10px; width: 250px;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 250px;
         }
+
         .tools-panel {
-            background: rgba(43, 119, 255, 0.9); padding: 15px;
-            border-radius: 10px; border: 4px solid #000000; box-shadow: 4px 4px 0px #000000;
-            display: flex; flex-direction: column; gap: 10px; backdrop-filter: blur(4px);
+            background: rgba(43, 119, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            border: 4px solid #000000;
+            box-shadow: 4px 4px 0px #000000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            backdrop-filter: blur(4px);
         }
-        .action-buttons-row { display: flex; gap: 10px; justify-content: space-between; }
-        .action-buttons-row button { flex-grow: 1; padding: 8px; }
+
+        .action-buttons-row {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .action-buttons-row button {
+            flex-grow: 1;
+            padding: 8px;
+        }
+
         #palette {
-            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); z-index: 10;
-            display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
-            width: 90vw; max-width: 600px; background: rgba(0, 0, 0, 0.6);
-            padding: 10px; border-radius: 10px; border: 3px solid #000; backdrop-filter: blur(4px);
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            width: 90vw;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            border-radius: 10px;
+            border: 3px solid #000;
+            backdrop-filter: blur(4px);
         }
+
         button.ui-btn {
-            background: #ffcc00; border: 3px solid #000000; padding: 8px 12px;
-            border-radius: 6px; cursor: pointer; font-family: 'MyCustomFont', cursive;
-            font-size: 16px; color: #ffffff; -webkit-text-stroke: 0.5px #000000;
-            text-shadow: 2px 2px 0px #000000; box-shadow: 3px 3px 0px #000000;
-            transition: all 0.1s; text-transform: uppercase;
-            display: flex; align-items: center; justify-content: center; gap: 5px;
+            background: #ffcc00;
+            border: 3px solid #000000;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'MyCustomFont', cursive;
+            font-size: 16px;
+            color: #ffffff;
+            -webkit-text-stroke: 0.5px #000000;
+            text-shadow: 2px 2px 0px #000000;
+            box-shadow: 3px 3px 0px #000000;
+            transition: all 0.1s;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
         }
-        button.ui-btn:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 0px 0px 0px #000000; }
-        button.ui-btn:disabled { background: #757575; color: #cccccc; cursor: not-allowed; box-shadow: 3px 3px 0px #000000; }
-        .tool-mode { background: #1579ff; flex-grow: 1; }
-        .tool-mode.active { background: #21ff00; }
-        #eraser-btn { background: #ffcc00; width: 100%; }
-        #eraser-btn.active { background: #fff; border-color: #21ff00; }
-        input[type="range"] { flex-grow: 1; -webkit-appearance: none; width: 100%; background: transparent; }
-        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 14px; background: #000000; border-radius: 7px; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 30px; width: 30px; border-radius: 50%; background: #21ff00; border: 4px solid #000000; margin-top: -8px; cursor: pointer; }
+
+        button.ui-btn:active:not(:disabled) {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px #000000;
+        }
+
+        button.ui-btn:disabled {
+            background: #757575;
+            color: #cccccc;
+            cursor: not-allowed;
+            box-shadow: 3px 3px 0px #000000;
+        }
+
+        .tool-mode {
+            background: #1579ff;
+            flex-grow: 1;
+        }
+
+        .tool-mode.active {
+            background: #21ff00;
+        }
+
+        #eraser-btn {
+            background: #ffcc00;
+            width: 100%;
+        }
+
+        #eraser-btn.active {
+            background: #fff;
+            border-color: #21ff00;
+        }
+
+        input[type="range"] {
+            flex-grow: 1;
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 14px;
+            background: #000000;
+            border-radius: 7px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+            background: #21ff00;
+            border: 4px solid #000000;
+            margin-top: -8px;
+            cursor: pointer;
+        }
+
         .color-btn {
-            width: clamp(30px, 8vw, 42px); height: clamp(30px, 8vw, 42px);
-            border-radius: 8px; border: 3px solid #000000; cursor: pointer;
-            transition: all 0.1s; box-shadow: 3px 3px 0px #000000;
+            width: clamp(30px, 8vw, 42px);
+            height: clamp(30px, 8vw, 42px);
+            border-radius: 8px;
+            border: 3px solid #000000;
+            cursor: pointer;
+            transition: all 0.1s;
+            box-shadow: 3px 3px 0px #000000;
         }
-        .color-btn:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px #000000; }
-        .color-btn.active { transform: scale(1.1); border-color: #ffffff; box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.8); }
+
+        .color-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px #000000;
+        }
+
+        .color-btn.active {
+            transform: scale(1.1);
+            border-color: #ffffff;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.8);
+        }
+
         button.action-btn {
-            padding: 12px; font-size: 18px; background: #ffcc00; color: #ffffff;
-            border: 4px solid #000000; border-radius: 8px; cursor: pointer;
-            font-family: 'MyCustomFont', cursive; -webkit-text-stroke: 1px #000000;
-            text-shadow: 2px 2px 0px #000000; box-shadow: 4px 4px 0px #000000;
-            transition: all 0.1s; width: 100%; text-transform: uppercase;
+            padding: 12px;
+            font-size: 18px;
+            background: #ffcc00;
+            color: #ffffff;
+            border: 4px solid #000000;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'MyCustomFont', cursive;
+            -webkit-text-stroke: 1px #000000;
+            text-shadow: 2px 2px 0px #000000;
+            box-shadow: 4px 4px 0px #000000;
+            transition: all 0.1s;
+            width: 100%;
+            text-transform: uppercase;
         }
-        button.action-btn:active { transform: translate(3px, 3px); box-shadow: 0px 0px 0px #000000; }
+
+        button.action-btn:active {
+            transform: translate(3px, 3px);
+            box-shadow: 0px 0px 0px #000000;
+        }
 
         @media (max-width: 800px) {
-            /* *** ИЗМЕНЕНИЕ: Белый фон теперь только на мобильных *** */
-            #game-screen { background-color: white; }
+            #game-screen {
+                background-color: white;
+            }
 
-            .hide-text { display: none; }
-            #artboard { border: none; box-shadow: none; border-radius: 0; }
-            .header-game { top: 5px; left: 5px; padding: 4px 6px; border-width: 2px; }
-            #game-title { display: none; }
-            button.ui-btn { padding: 4px 8px; font-size: 18px; border-width: 2px; }
-            .canvas-toolbar { top: 5px; right: 5px; padding: 4px; gap: 4px; border-width: 2px; }
-            .tools-sidebar { top: auto; bottom: 60px; right: 5px; left: 5px; transform: none; flex-direction: row; width: auto; align-items: stretch; justify-content: center; gap: 5px; }
-            .tools-panel { flex-grow: 1; padding: 5px 8px; flex-direction: row; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 8px; border-width: 2px; box-shadow: 2px 2px 0px #000000; }
-            .tools-panel > div:nth-child(2) { display: none; }
-            .action-buttons-row { gap: 5px; flex-grow: 0; width: auto; }
-            .action-buttons-row button { padding: 4px 10px; font-size: 18px; }
-            #eraser-btn { width: auto; margin-top: 0 !important; padding: 4px 8px; }
-            input[type="range"] { max-width: 120px; margin: 0; flex-grow: 1; }
-            button.action-btn { width: auto; padding: 5px 10px; font-size: 18px; margin-bottom: 0; border-width: 2px; box-shadow: 2px 2px 0px #000000; }
-            #palette { bottom: 5px; width: 95vw; padding: 5px; gap: 4px; border-width: 2px; }
-            .color-btn { width: 26px; height: 26px; border-width: 2px; box-shadow: 2px 2px 0px #000000; }
+            .hide-text {
+                display: none;
+            }
+
+            #artboard {
+                border: none;
+                box-shadow: none;
+                border-radius: 0;
+            }
+
+            .header-game {
+                top: 5px;
+                left: 5px;
+                padding: 4px 6px;
+                border-width: 2px;
+            }
+
+            #game-title {
+                display: none;
+            }
+
+            button.ui-btn {
+                padding: 4px 8px;
+                font-size: 18px;
+                border-width: 2px;
+            }
+
+            .canvas-toolbar {
+                top: 5px;
+                right: 5px;
+                padding: 4px;
+                gap: 4px;
+                border-width: 2px;
+            }
+
+            .tools-sidebar {
+                top: auto;
+                bottom: 60px;
+                right: 5px;
+                left: 5px;
+                transform: none;
+                flex-direction: row;
+                width: auto;
+                align-items: stretch;
+                justify-content: center;
+                gap: 5px;
+            }
+
+            .tools-panel {
+                flex-grow: 1;
+                padding: 5px 8px;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+                border-width: 2px;
+                box-shadow: 2px 2px 0px #000000;
+            }
+
+            .tools-panel>div:nth-child(2) {
+                display: none;
+            }
+
+            .action-buttons-row {
+                gap: 5px;
+                flex-grow: 0;
+                width: auto;
+            }
+
+            .action-buttons-row button {
+                padding: 4px 10px;
+                font-size: 18px;
+            }
+
+            #eraser-btn {
+                width: auto;
+                margin-top: 0 !important;
+                padding: 4px 8px;
+            }
+
+            input[type="range"] {
+                max-width: 120px;
+                margin: 0;
+                flex-grow: 1;
+            }
+
+            button.action-btn {
+                width: auto;
+                padding: 5px 10px;
+                font-size: 18px;
+                margin-bottom: 0;
+                border-width: 2px;
+                box-shadow: 2px 2px 0px #000000;
+            }
+
+            #palette {
+                bottom: 5px;
+                width: 95vw;
+                padding: 5px;
+                gap: 4px;
+                border-width: 2px;
+            }
+
+            .color-btn {
+                width: 26px;
+                height: 26px;
+                border-width: 2px;
+                box-shadow: 2px 2px 0px #000000;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div id="menu-screen" class="screen active"><h1>ВЫБЕРИ РАСКРАСКУ</h1><div class="search-container"><input type="text" id="search-input" class="search-input" placeholder="🔍 Найти..." autocomplete="off"></div><div id="levels-grid"></div><div class="pagination" id="pagination-controls" style="display: none;"><button class="ui-btn" id="prev-page">⬅</button><span id="page-info">1 / 1</span><button class="ui-btn" id="next-page">➡</button></div></div>
-    
+    <div id="menu-screen" class="screen active">
+        <h1>ВЫБЕРИ РАСКРАСКУ</h1>
+        <div class="search-container"><input type="text" id="search-input" class="search-input"
+                placeholder="🔍 Найти..." autocomplete="off"></div>
+        <div id="levels-grid"></div>
+        <div class="pagination" id="pagination-controls" style="display: none;"><button class="ui-btn"
+                id="prev-page">⬅</button><span id="page-info">1 / 1</span><button class="ui-btn"
+                id="next-page">➡</button></div>
+    </div>
+
     <div id="game-screen" class="screen">
         <div class="canvas-viewport" id="viewport">
-            <!-- ЭТОТ DIV - КЛЮЧ К РЕШЕНИЮ -->
             <div id="artboard">
                 <div id="canvas-transform-layer">
                     <canvas id="paintCanvas"></canvas>
@@ -287,9 +615,23 @@
                 </div>
             </div>
         </div>
-        <div class="header-game"><button class="ui-btn" id="back-btn">⬅ <span class="hide-text">НАЗАД</span></button><h1 id="game-title">Рисунок</h1></div>
-        <div class="canvas-toolbar"><button class="ui-btn tool-mode active" id="mode-draw">🖌 <span class="hide-text">Рисовать</span></button><button class="ui-btn tool-mode" id="mode-pan">✋ <span class="hide-text">Двигать</span></button><button class="ui-btn" id="zoom-in">➕</button><button class="ui-btn" id="zoom-out">➖</button></div>
-        <div class="tools-sidebar"><div class="tools-panel"><div class="action-buttons-row"><button class="ui-btn" id="undo-btn" disabled>↩</button><button class="ui-btn" id="redo-btn" disabled>↪</button></div><div style="text-align: center; color: white; -webkit-text-stroke: 1px #000; text-shadow: 2px 2px 0 #000; font-size: 16px; margin-top: 2px;">ТОЛЩИНА КИСТИ</div><input type="range" id="brush-size" min="5" max="50" value="20"><button class="ui-btn" id="eraser-btn">🧼</button></div><button class="action-btn" id="reset-btn">🗑</button></div>
+        <div class="header-game"><button class="ui-btn" id="back-btn">⬅ <span class="hide-text">НАЗАД</span></button>
+            <h1 id="game-title">Рисунок</h1>
+        </div>
+        <div class="canvas-toolbar"><button class="ui-btn tool-mode active" id="mode-draw">🖌 <span
+                    class="hide-text">Рисовать</span></button><button class="ui-btn tool-mode" id="mode-pan">✋ <span
+                    class="hide-text">Двигать</span></button><button class="ui-btn" id="zoom-in">➕</button><button
+                class="ui-btn" id="zoom-out">➖</button></div>
+        <div class="tools-sidebar">
+            <div class="tools-panel">
+                <div class="action-buttons-row"><button class="ui-btn" id="undo-btn" disabled>↩</button><button
+                        class="ui-btn" id="redo-btn" disabled>↪</button></div>
+                <div
+                    style="text-align: center; color: white; -webkit-text-stroke: 1px #000; text-shadow: 2px 2px 0 #000; font-size: 16px; margin-top: 2px;">
+                    ТОЛЩИНА КИСТИ</div><input type="range" id="brush-size" min="5" max="50" value="20"><button
+                    class="ui-btn" id="eraser-btn">🧼</button>
+            </div><button class="action-btn" id="reset-btn">🗑</button>
+        </div>
         <div id="palette"></div>
     </div>
     <script>
@@ -306,15 +648,15 @@
         undoBtn.addEventListener('click', undo); redoBtn.addEventListener('click', redo);
         function applyTransform() { transformLayer.style.transform = `translate(${panX}px, ${panY}px) scale(${currentScale})`; }
         function zoomToPoint(scaleMultiplier, viewportX, viewportY) { let newScale = currentScale * scaleMultiplier; newScale = Math.max(0.3, Math.min(newScale, 10.0)); const actualMultiplier = newScale / currentScale; panX = viewportX - (viewportX - panX) * actualMultiplier; panY = viewportY - (viewportY - panY) * actualMultiplier; currentScale = newScale; applyTransform(); }
-        
+
         artboard.addEventListener('wheel', (e) => { e.preventDefault(); const rect = artboard.getBoundingClientRect(); const mouseX = e.clientX - rect.left; const mouseY = e.clientY - rect.top; if (e.ctrlKey) { const zoomFactor = Math.exp(-e.deltaY * 0.015); zoomToPoint(zoomFactor, mouseX, mouseY); } else { panX -= e.deltaX; panY -= e.deltaY; applyTransform(); } }, { passive: false });
         document.getElementById('zoom-in').onclick = () => { const rect = artboard.getBoundingClientRect(); zoomToPoint(1.15, rect.width / 2, rect.height / 2); }; document.getElementById('zoom-out').onclick = () => { const rect = artboard.getBoundingClientRect(); zoomToPoint(1 / 1.15, rect.width / 2, rect.height / 2); };
-        
+
         document.getElementById('mode-draw').onclick = (e) => { currentMode = 'draw'; document.querySelectorAll('.tool-mode').forEach(b => b.classList.remove('active')); e.currentTarget.classList.add('active'); artboard.style.cursor = 'crosshair'; }; document.getElementById('mode-pan').onclick = (e) => { currentMode = 'pan'; document.querySelectorAll('.tool-mode').forEach(b => b.classList.remove('active')); e.currentTarget.classList.add('active'); artboard.style.cursor = 'grab'; };
         function openLevel(index) {
             const pic = pictures[index];
             document.getElementById('game-title').innerText = pic.title;
-            
+
             currentScale = 1; panX = 0; panY = 0;
             applyTransform();
 
@@ -326,7 +668,7 @@
             pCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
             svgOverlay.innerHTML = '';
             currentPaths2D = [];
-            
+
             const measurer = document.createElement('div');
             measurer.style.cssText = 'position:absolute; top:0; left:0; opacity:0; pointer-events:none; width:800px; height:800px; overflow:hidden; z-index:-100;';
             let safeSvgStr = pic.svg;
@@ -336,7 +678,7 @@
             }
             measurer.innerHTML = safeSvgStr;
             document.body.appendChild(measurer);
-            
+
             const svgEl = measurer.querySelector('svg');
             let vbX = 0, vbY = 0, vbW = 200, vbH = 200;
             if (svgEl.getAttribute('viewBox')) {
@@ -355,13 +697,13 @@
             svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
             svgEl.style.width = '100%';
             svgEl.style.height = '100%';
-            
+
             const scale = Math.min(CANVAS_SIZE / vbW, CANVAS_SIZE / vbH);
             const finalW = vbW * scale;
             const finalH = vbH * scale;
             const offsetX = (CANVAS_SIZE - finalW) / 2;
             const offsetY = (CANVAS_SIZE - finalH) / 2;
-            
+
             const rootMatrix = svgEl.getScreenCTM();
             const paths = svgEl.querySelectorAll('path');
             paths.forEach(pathNode => {
@@ -376,29 +718,29 @@
                 scaledPath.addPath(p, m);
                 currentPaths2D.push(scaledPath);
             });
-            
+
             svgOverlay.appendChild(svgEl);
             document.body.removeChild(measurer);
-            
+
             menuScreen.classList.remove('active');
             gameScreen.classList.add('active');
         }
         document.getElementById('reset-btn').addEventListener('click', () => { saveState(); pCtx.fillStyle = '#ffffff'; pCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE); }); document.getElementById('back-btn').addEventListener('click', () => { gameScreen.classList.remove('active'); menuScreen.classList.add('active'); showInterstitialAd(); });
         function getCanvasPos(clientX, clientY) { const rect = paintCanvas.getBoundingClientRect(); const scaleX = paintCanvas.width / rect.width; const scaleY = paintCanvas.height / rect.height; return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY }; }
-        
+
         artboard.addEventListener('pointerdown', (e) => { e.preventDefault(); evCache.push(e); if (evCache.length === 1) { if (currentMode === 'pan') { isGesturing = true; transformLayer.classList.add('panning'); artboard.style.cursor = 'grabbing'; } else { const pos = getCanvasPos(e.clientX, e.clientY); startDrawing(pos); } } else if (evCache.length >= 2) { if (isDrawing && undoStack.length > 0) { undo(); redoStack = []; updateHistoryButtons(); } stopDrawing(); isGesturing = true; transformLayer.classList.add('panning'); prevDiff = Math.hypot(evCache[0].clientX - evCache[1].clientX, evCache[0].clientY - evCache[1].clientY); prevCenter = { x: (evCache[0].clientX + evCache[1].clientX) / 2, y: (evCache[0].clientY + evCache[1].clientY) / 2 }; } });
         window.addEventListener('pointermove', (e) => {
             const index = evCache.findIndex(ev => ev.pointerId === e.pointerId); if (index === -1) return; const dx = e.clientX - evCache[index].clientX; const dy = e.clientY - evCache[index].clientY; evCache[index] = e; if (evCache.length === 1) { if (isGesturing && currentMode === 'pan') { panX += dx; panY += dy; applyTransform(); } else if (isDrawing) { const pos = getCanvasPos(e.clientX, e.clientY); draw(pos); } } else if (evCache.length >= 2 && isGesturing) {
                 const curDiff = Math.hypot(evCache[0].clientX - evCache[1].clientX, evCache[0].clientY - evCache[1].clientY); const curCenter = { x: (evCache[0].clientX + evCache[1].clientX) / 2, y: (evCache[0].clientY + evCache[1].clientY) / 2 }; if (prevCenter && prevDiff > 0) {
                     panX += (curCenter.x - prevCenter.x); panY += (curCenter.y - prevCenter.y); const zoomFactor = curDiff / prevDiff;
-                    const rect = artboard.getBoundingClientRect(); // Координаты относительно artboard
+                    const rect = artboard.getBoundingClientRect();
                     zoomToPoint(zoomFactor, curCenter.x - rect.left, curCenter.y - rect.top);
                 } prevDiff = curDiff; prevCenter = curCenter;
             }
         });
         function handlePointerUp(e) { evCache = evCache.filter(ev => ev.pointerId !== e.pointerId); if (evCache.length < 2) { prevDiff = -1; prevCenter = null; } if (evCache.length === 0) { isGesturing = false; stopDrawing(); transformLayer.classList.remove('panning'); artboard.style.cursor = currentMode === 'pan' ? 'grab' : 'crosshair'; } }
         window.addEventListener('pointerup', handlePointerUp); window.addEventListener('pointercancel', handlePointerUp); artboard.addEventListener('pointerout', (e) => { if (evCache.length === 1 && !isGesturing && e.pointerType === 'mouse') { handlePointerUp(e); } });
-        
+
         function startDrawing(pos) { activePath = null; for (let i = currentPaths2D.length - 1; i >= 0; i--) { if (pCtx.isPointInPath(currentPaths2D[i], pos.x, pos.y)) { activePath = currentPaths2D[i]; break; } } if (activePath) { saveState(); isDrawing = true; lastX = pos.x; lastY = pos.y; drawDot(pos.x, pos.y); } }
         function draw(pos) { if (!isDrawing || !activePath) return; pCtx.save(); pCtx.clip(activePath); pCtx.lineCap = 'round'; pCtx.lineJoin = 'round'; pCtx.lineWidth = currentBrushSize * (CANVAS_SIZE / paintCanvas.clientWidth) / currentScale; pCtx.strokeStyle = isEraser ? '#ffffff' : currentColor; pCtx.beginPath(); pCtx.moveTo(lastX, lastY); pCtx.lineTo(pos.x, pos.y); pCtx.stroke(); pCtx.restore(); lastX = pos.x; lastY = pos.y; }
         function drawDot(x, y) { pCtx.save(); pCtx.clip(activePath); pCtx.fillStyle = isEraser ? '#ffffff' : currentColor; pCtx.beginPath(); let radius = (currentBrushSize * (CANVAS_SIZE / paintCanvas.clientWidth) / currentScale) / 2; pCtx.arc(x, y, radius, 0, Math.PI * 2); pCtx.fill(); pCtx.restore(); }
