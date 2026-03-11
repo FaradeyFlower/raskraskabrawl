@@ -167,7 +167,6 @@
             cursor: crosshair;
             background: white;
             box-sizing: border-box;
-            overflow: hidden; /* *** ФИНАЛЬНОЕ ИСПРАВЛЕНИЕ: Обрезаем всё, что выходит за рамки *** */
 
             /* Стили для ПК */
             border: 5px solid #000000;
@@ -271,6 +270,13 @@
             button.action-btn { width: auto; padding: 5px 10px; font-size: 18px; margin-bottom: 0; border-width: 2px; box-shadow: 2px 2px 0px #000000; }
             #palette { bottom: 5px; width: 95vw; padding: 5px; gap: 4px; border-width: 2px; }
             .color-btn { width: 26px; height: 26px; border-width: 2px; box-shadow: 2px 2px 0px #000000; }
+        }
+
+        /* *** ФИНАЛЬНОЕ ИСПРАВЛЕНИЕ: Обрезка только для ПК *** */
+        @media (min-width: 801px) {
+            #artboard {
+                overflow: hidden;
+            }
         }
     </style>
 </head>
