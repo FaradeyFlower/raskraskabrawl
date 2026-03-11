@@ -146,7 +146,6 @@
         #page-info { font-size: 20px; color: #fff; -webkit-text-stroke: 1px #000; }
         
         /* ================= ЭКРАН ИГРЫ: ФИНАЛЬНАЯ СТРУКТУРА ================= */
-        #game-screen { background-color: white; }
         
         .canvas-viewport {
             position: absolute;
@@ -166,6 +165,7 @@
             height: 100vmin;
             position: relative;
             cursor: crosshair;
+            background: white; /* Фон для области рисования */
             /* Стили для ПК */
             border: 5px solid #000000;
             border-radius: 8px;
@@ -251,6 +251,9 @@
         button.action-btn:active { transform: translate(3px, 3px); box-shadow: 0px 0px 0px #000000; }
 
         @media (max-width: 800px) {
+            /* *** ИЗМЕНЕНИЕ: Белый фон теперь только на мобильных *** */
+            #game-screen { background-color: white; }
+
             .hide-text { display: none; }
             #artboard { border: none; box-shadow: none; border-radius: 0; }
             .header-game { top: 5px; left: 5px; padding: 4px 6px; border-width: 2px; }
@@ -304,7 +307,6 @@
         function applyTransform() { transformLayer.style.transform = `translate(${panX}px, ${panY}px) scale(${currentScale})`; }
         function zoomToPoint(scaleMultiplier, viewportX, viewportY) { let newScale = currentScale * scaleMultiplier; newScale = Math.max(0.3, Math.min(newScale, 10.0)); const actualMultiplier = newScale / currentScale; panX = viewportX - (viewportX - panX) * actualMultiplier; panY = viewportY - (viewportY - panY) * actualMultiplier; currentScale = newScale; applyTransform(); }
         
-        // ВАЖНО: Вешаем обработчики на artboard, а не на viewport
         artboard.addEventListener('wheel', (e) => { e.preventDefault(); const rect = artboard.getBoundingClientRect(); const mouseX = e.clientX - rect.left; const mouseY = e.clientY - rect.top; if (e.ctrlKey) { const zoomFactor = Math.exp(-e.deltaY * 0.015); zoomToPoint(zoomFactor, mouseX, mouseY); } else { panX -= e.deltaX; panY -= e.deltaY; applyTransform(); } }, { passive: false });
         document.getElementById('zoom-in').onclick = () => { const rect = artboard.getBoundingClientRect(); zoomToPoint(1.15, rect.width / 2, rect.height / 2); }; document.getElementById('zoom-out').onclick = () => { const rect = artboard.getBoundingClientRect(); zoomToPoint(1 / 1.15, rect.width / 2, rect.height / 2); };
         
@@ -313,7 +315,6 @@
             const pic = pictures[index];
             document.getElementById('game-title').innerText = pic.title;
             
-            // ВОЗВРАЩАЕМ К ПРОСТОМУ СБРОСУ
             currentScale = 1; panX = 0; panY = 0;
             applyTransform();
 
@@ -385,7 +386,6 @@
         document.getElementById('reset-btn').addEventListener('click', () => { saveState(); pCtx.fillStyle = '#ffffff'; pCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE); }); document.getElementById('back-btn').addEventListener('click', () => { gameScreen.classList.remove('active'); menuScreen.classList.add('active'); showInterstitialAd(); });
         function getCanvasPos(clientX, clientY) { const rect = paintCanvas.getBoundingClientRect(); const scaleX = paintCanvas.width / rect.width; const scaleY = paintCanvas.height / rect.height; return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY }; }
         
-        // ВАЖНО: Вешаем обработчики на artboard
         artboard.addEventListener('pointerdown', (e) => { e.preventDefault(); evCache.push(e); if (evCache.length === 1) { if (currentMode === 'pan') { isGesturing = true; transformLayer.classList.add('panning'); artboard.style.cursor = 'grabbing'; } else { const pos = getCanvasPos(e.clientX, e.clientY); startDrawing(pos); } } else if (evCache.length >= 2) { if (isDrawing && undoStack.length > 0) { undo(); redoStack = []; updateHistoryButtons(); } stopDrawing(); isGesturing = true; transformLayer.classList.add('panning'); prevDiff = Math.hypot(evCache[0].clientX - evCache[1].clientX, evCache[0].clientY - evCache[1].clientY); prevCenter = { x: (evCache[0].clientX + evCache[1].clientX) / 2, y: (evCache[0].clientY + evCache[1].clientY) / 2 }; } });
         window.addEventListener('pointermove', (e) => {
             const index = evCache.findIndex(ev => ev.pointerId === e.pointerId); if (index === -1) return; const dx = e.clientX - evCache[index].clientX; const dy = e.clientY - evCache[index].clientY; evCache[index] = e; if (evCache.length === 1) { if (isGesturing && currentMode === 'pan') { panX += dx; panY += dy; applyTransform(); } else if (isDrawing) { const pos = getCanvasPos(e.clientX, e.clientY); draw(pos); } } else if (evCache.length >= 2 && isGesturing) {
